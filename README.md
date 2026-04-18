@@ -141,33 +141,6 @@ npx react-native run-ios
 * Safe Area Support
 * Bottom Navigation
 
-<!-- ---
-
-## 🌟 Future Roadmap
-
-* Temple Locator with Maps
-* Daily Notifications
-* Jain Calendar
-* Audio Bhakti / Stavans
-* Multi-language Support
-* User Favorites
-* Search Functionality
-* Reels / Shorts
-* Offline Mode
-* Donation Module -->
-
----
-
-## 📸 Screenshots
-
-*Add app screenshots here*
-
-```md
-![Home](src/assets/screenshots/home.png)
-![Profile](src/assets/screenshots/profile.png)
-![Tirth](src/assets/screenshots/tirth.png)
-```
-
 ---
 
 ## 🙏 Purpose
