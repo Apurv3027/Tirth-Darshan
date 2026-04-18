@@ -86,6 +86,7 @@ Tirth-Darshan/
 │── App.tsx
 │── package.json
 │── README.md
+```
 
 ---
 
