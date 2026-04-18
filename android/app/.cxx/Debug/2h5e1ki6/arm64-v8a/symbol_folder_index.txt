@@ -1,0 +1,1 @@
+/Users/apurvpatel/Documents/Development/ReactNative/TirthDarshan/android/app/build/intermediates/cxx/Debug/2h5e1ki6/obj/arm64-v8a

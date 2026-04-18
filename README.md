@@ -1,97 +1,208 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+````md
+# 🕉️ TirthDarshan
 
-# Getting Started
+A beautiful and modern **React Native spiritual mobile application** built to explore Jain heritage, sacred Tirths, Tirthankars, teachings, and divine places.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+Designed with a premium dark UI, smooth navigation, reusable components, and a peaceful user experience.
 
-## Step 1: Start Metro
+---
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 📱 Features
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### ✨ Home Screen
+- Premium spiritual UI design
+- Welcome message with Jain greeting
+- Inspirational quote card
+- Quick explore action cards
+- Daily thought section
 
-```sh
-# Using npm
-npm start
+### 🕉️ Tirthankars
+- Explore all 24 Jain Tirthankars
+- Detailed profiles
+- Sacred symbols, colors, teachings, life events
+- Panch Kalyanak details
+- Share profile feature
 
-# OR using Yarn
-yarn start
+### 🏛️ Tirth Places
+- Discover famous Jain pilgrimage places
+- Sacred history and significance
+- Darshan experience
+- Temple details and navigation
+
+### 📖 Teachings
+Learn spiritual values such as:
+
+- Ahimsa (Non-violence)
+- Satya (Truth)
+- Aparigraha (Non-attachment)
+- Compassion
+- Self-discipline
+- Spiritual growth
+
+### 🎨 UI / UX
+- Dark premium theme
+- Reusable ScreenWrapper with Safe Area
+- Smooth navigation
+- Bottom tabs
+- Custom headers
+- Clean modern design
+- Responsive layout
+
+---
+
+## 🚀 Tech Stack
+
+- React Native
+- TypeScript
+- React Navigation
+- Native Stack Navigator
+- Bottom Tabs Navigator
+- react-native-safe-area-context
+
+---
+
+## 📂 Project Structure
+
+```bash
+Tirth-Darshan/
+│── src/
+│   ├── components/
+│   │   └── ScreenWrapper.tsx
+│   │
+│   ├── navigation/
+│   │   └── index.tsx
+│   │
+│   ├── screens/
+│   │   ├── HomeScreen.tsx
+│   │   ├── TirthankarListScreen.tsx
+│   │   ├── TirthankarProfileScreen.tsx
+│   │   └── TirthDetailScreen.tsx
+│   │
+│   ├── data/
+│   │   ├── tirthankars.ts
+│   │   └── tirths.ts
+│   │
+│   └── assets/
+│
+│── App.tsx
+│── package.json
+│── README.md
+````
+
+---
+
+## ⚙️ Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Apurv3027/Tirth-Darshan.git
 ```
 
-## Step 2: Build and run your app
+Go to project folder:
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+```bash
+cd Tirth-Darshan
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+---
+
+## ▶️ Run App
 
 ### Android
 
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```bash
+npx react-native run-android
 ```
 
 ### iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
+```bash
+cd ios
+pod install
+cd ..
+npx react-native run-ios
 ```
 
-Then, and every time you update your native dependencies, run:
+---
 
-```sh
-bundle exec pod install
+## 🔥 Current Modules
+
+* Home Dashboard
+* 24 Tirthankars Listing
+* Tirthankar Detailed Profile
+* Famous Tirth Places
+* Teachings Section
+* Safe Area Support
+* Bottom Navigation
+
+<!-- ---
+
+## 🌟 Future Roadmap
+
+* Temple Locator with Maps
+* Daily Notifications
+* Jain Calendar
+* Audio Bhakti / Stavans
+* Multi-language Support
+* User Favorites
+* Search Functionality
+* Reels / Shorts
+* Offline Mode
+* Donation Module -->
+
+---
+
+## 📸 Screenshots
+
+*Add app screenshots here*
+
+```md
+![Home](src/assets/screenshots/home.png)
+![Profile](src/assets/screenshots/profile.png)
+![Tirth](src/assets/screenshots/tirth.png)
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+---
 
-```sh
-# Using npm
-npm run ios
+## 🙏 Purpose
 
-# OR using Yarn
-yarn ios
-```
+TirthDarshan is created to preserve Jain culture and spirituality digitally, helping users connect with sacred teachings and pilgrimage places in a modern mobile experience.
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🤝 Contributing
 
-## Step 3: Modify your app
+Contributions, suggestions, and feature requests are welcome.
 
-Now that you have successfully run the app, let's make changes!
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push your branch
+5. Open a Pull Request
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+---
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## 📄 License
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+This project is licensed under the MIT License.
 
-## Congratulations! :tada:
+---
 
-You've successfully run and modified your React Native App. :partying_face:
+## 👨‍💻 Developer
 
-### Now what?
+Developed with devotion using React Native.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+**Apurv Patel**
 
-# Troubleshooting
+---
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## 🕉️ Jai Jinendra
 
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+May peace, wisdom, and compassion guide all beings.
