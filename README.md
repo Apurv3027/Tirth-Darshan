@@ -1,4 +1,3 @@
-````md
 # 🕉️ TirthDarshan
 
 A beautiful and modern **React Native spiritual mobile application** built to explore Jain heritage, sacred Tirths, Tirthankars, teachings, and divine places.
@@ -87,7 +86,6 @@ Tirth-Darshan/
 │── App.tsx
 │── package.json
 │── README.md
-````
 
 ---
 
