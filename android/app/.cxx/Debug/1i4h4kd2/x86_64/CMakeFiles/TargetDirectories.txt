@@ -1,6 +1,0 @@
-/Users/apurvpatel/Documents/Development/React Native/TirthDarshan/android/app/.cxx/Debug/1i4h4kd2/x86_64/CMakeFiles/appmodules.dir
-/Users/apurvpatel/Documents/Development/React Native/TirthDarshan/android/app/.cxx/Debug/1i4h4kd2/x86_64/CMakeFiles/edit_cache.dir
-/Users/apurvpatel/Documents/Development/React Native/TirthDarshan/android/app/.cxx/Debug/1i4h4kd2/x86_64/CMakeFiles/rebuild_cache.dir
-/Users/apurvpatel/Documents/Development/React Native/TirthDarshan/android/app/.cxx/Debug/1i4h4kd2/x86_64/safeareacontext_autolinked_build/CMakeFiles/react_codegen_safeareacontext.dir
-/Users/apurvpatel/Documents/Development/React Native/TirthDarshan/android/app/.cxx/Debug/1i4h4kd2/x86_64/safeareacontext_autolinked_build/CMakeFiles/edit_cache.dir
-/Users/apurvpatel/Documents/Development/React Native/TirthDarshan/android/app/.cxx/Debug/1i4h4kd2/x86_64/safeareacontext_autolinked_build/CMakeFiles/rebuild_cache.dir

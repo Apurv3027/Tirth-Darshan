@@ -9,9 +9,11 @@ import { TirthankarListScreen } from '../screens/TirthankarListScreen';
 import { TirthankarProfileScreen } from '../screens/TirthankarProfileScreen';
 import { TirthDetailScreen } from '../screens/TirthDetailScreen';
 // import { ReelsScreen } from '../screens/ReelsScreen';
+import { SplashScreen } from '../screens/SplashScreen';
 
 // ── Type definitions ──
 export type RootStackParams = {
+    Splash: undefined;
     MainTabs: undefined;
     TirthankarProfile: { id: number };
     TirthDetail: { id: string };
@@ -64,6 +66,10 @@ export const AppNavigator = () => (
                 headerShown: false,
             }}
         >
+            <Stack.Screen
+                name="Splash"
+                component={SplashScreen}
+            />
             <Stack.Screen name="MainTabs" component={TabNavigator} />
             <Stack.Screen
                 name="TirthankarProfile"

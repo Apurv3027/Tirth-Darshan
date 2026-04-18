@@ -1,4 +1,0 @@
-/Users/apurvpatel/Documents/Development/React Native/TirthDarshan/android/app/.cxx/Debug/1i4h4kd2/x86/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/foo.dir
-/Users/apurvpatel/Documents/Development/React Native/TirthDarshan/android/app/.cxx/Debug/1i4h4kd2/x86/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/boo.dir
-/Users/apurvpatel/Documents/Development/React Native/TirthDarshan/android/app/.cxx/Debug/1i4h4kd2/x86/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/edit_cache.dir
-/Users/apurvpatel/Documents/Development/React Native/TirthDarshan/android/app/.cxx/Debug/1i4h4kd2/x86/CMakeFiles/_CMakeLTOTest-CXX/bin/CMakeFiles/rebuild_cache.dir
