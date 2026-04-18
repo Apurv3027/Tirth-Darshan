@@ -72,6 +72,10 @@ android/app/*.keystore
 android/*.keystore
 !android/app/debug.keystore
 
+# Android native build cache
+android/.cxx/
+android/app/.cxx/
+
 # Kotlin
 .kotlin/
 
