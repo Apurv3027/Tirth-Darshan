@@ -1,137 +1,365 @@
-import React, { useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, memo } from 'react';
 import {
-    View, FlatList, Dimensions, StyleSheet,
-    TouchableOpacity, Text, ViewToken,
+    View,
+    FlatList,
+    Dimensions,
+    StyleSheet,
+    TouchableOpacity,
+    Text,
+    StatusBar,
+    ViewToken,
+    Image,
 } from 'react-native';
 import Video from 'react-native-video';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const { height, width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+
+// ── Tab bar height constant (keep in sync with AppNavigator) ──
+const TAB_BAR_HEIGHT = 62;
 
 type Reel = {
     id: string;
-    videoUrl: string;
     title: string;
-    category: 'bhajan' | 'darshan' | 'educational' | 'event';
-    deity?: string;
-    tirth?: string;
+    videoUrl: string;
+    profile: string;
+    username: string;
     likes: number;
+    comments: number;
+    shares: number;
+    music: string;
+    verified?: boolean;
 };
 
-const ReelItem = ({
-    reel,
-    isActive,
-}: {
-    reel: Reel;
-    isActive: boolean;
-}) => {
-    const [liked, setLiked] = useState(false);
+const REELS_DATA: Reel[] = [
+    {
+        id: '1',
+        title: 'Peaceful Jain Temple Darshan 🙏',
+        videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        profile: 'https://i.pravatar.cc/150?img=12',
+        username: 'JainWorld',
+        likes: 12450,
+        comments: 842,
+        shares: 540,
+        music: 'Bhakti Dhun',
+        verified: true,
+    },
+    {
+        id: '2',
+        title: 'Palitana Tirth Aerial View ✨',
+        videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        profile: 'https://i.pravatar.cc/150?img=32',
+        username: 'SpiritualIndia',
+        likes: 8650,
+        comments: 420,
+        shares: 231,
+        music: 'Temple Bells',
+    },
+    {
+        id: '3',
+        title: 'Morning Meditation Vibes 🌅',
+        videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        profile: 'https://i.pravatar.cc/150?img=22',
+        username: 'SoulReels',
+        likes: 22100,
+        comments: 1120,
+        shares: 654,
+        music: 'Meditation Loop',
+        verified: true,
+    },
+];
 
-    const categoryColor = {
-        bhajan: '#F5A623',
-        darshan: '#6B8CFF',
-        educational: '#4CAF50',
-        event: '#E91E63',
-    }[reel.category];
+const formatCount = (num: number) => {
+    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
+    if (num >= 1_000) return (num / 1_000).toFixed(1) + 'K';
+    return num.toString();
+};
+
+// ─────────────────────────────────────────────
+// ReelItem
+// ─────────────────────────────────────────────
+type ReelItemProps = {
+    item: Reel;
+    active: boolean;
+    /** Safe-area top inset so the header clears the status-bar notch */
+    topInset: number;
+    /** Combined bottom inset = tab bar height + device safe-area bottom */
+    bottomInset: number;
+};
+
+const ReelItem = memo(({ item, active, topInset, bottomInset }: ReelItemProps) => {
+    const [liked, setLiked] = useState(false);
+    const [paused, setPaused] = useState(false);
 
     return (
-        <View style={s.reelContainer}>
+        <View style={styles.page}>
+            {/* ── Video ── */}
             <Video
-                source={{ uri: reel.videoUrl }}
+                source={{ uri: item.videoUrl }}
                 style={StyleSheet.absoluteFill}
                 resizeMode="cover"
                 repeat
-                paused={!isActive}
+                paused={false}
                 muted={false}
+                onLoad={() => console.log('VIDEO LOADED')}
+                onBuffer={e => console.log('BUFFER', e)}
+                onError={e => console.log('VIDEO ERROR', e)}
             />
 
-            {/* Overlay gradient — bottom info */}
-            <View style={s.overlay}>
+            {/* ── Dark overlay ── */}
+            <View style={styles.overlay} />
 
-                {/* Category badge */}
-                <View style={[s.badge, { backgroundColor: categoryColor + '33', borderColor: categoryColor }]}>
-                    <Text style={[s.badgeText, { color: categoryColor }]}>
-                        {reel.category.toUpperCase()}
-                    </Text>
-                </View>
+            {/* ── Tap to pause ── */}
+            <TouchableOpacity
+                activeOpacity={1}
+                style={StyleSheet.absoluteFill}
+                onPress={() => setPaused(p => !p)}
+            />
 
-                {/* Title + tags */}
-                <Text style={s.title}>{reel.title}</Text>
-                {reel.deity && <Text style={s.tag}>🙏 {reel.deity}</Text>}
-                {reel.tirth && <Text style={s.tag}>🏛️ {reel.tirth}</Text>}
+            {/* ── "Reels" header — clears status bar + notch ── */}
+            <View style={[styles.header, { top: topInset + 8 }]}>
+                <Text style={styles.headerText}>Reels</Text>
             </View>
 
-            {/* Right action column */}
-            <View style={s.actions}>
-                <TouchableOpacity style={s.action} onPress={() => setLiked(v => !v)}>
-                    <Text style={[s.actionIcon, liked && { color: '#E91E63' }]}>♥</Text>
-                    <Text style={s.actionCount}>{reel.likes + (liked ? 1 : 0)}</Text>
+            {/* ── Right action buttons — above the tab bar ── */}
+            <View style={[styles.rightActions, { bottom: bottomInset + 20 }]}>
+                {/* Avatar */}
+                <TouchableOpacity style={styles.iconWrap}>
+                    <Image source={{ uri: item.profile }} style={styles.avatar} />
                 </TouchableOpacity>
-                <TouchableOpacity style={s.action}>
-                    <Text style={s.actionIcon}>↗</Text>
-                    <Text style={s.actionCount}>Share</Text>
+
+                {/* Like */}
+                <TouchableOpacity
+                    style={styles.iconWrap}
+                    onPress={() => setLiked(l => !l)}>
+                    <Text style={[styles.icon, liked && { color: '#ff2d55' }]}>♥</Text>
+                    <Text style={styles.count}>
+                        {formatCount(item.likes + (liked ? 1 : 0))}
+                    </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={s.action}>
-                    <Text style={s.actionIcon}>⋯</Text>
+
+                {/* Comment */}
+                <TouchableOpacity style={styles.iconWrap}>
+                    <Text style={styles.icon}>💬</Text>
+                    <Text style={styles.count}>{formatCount(item.comments)}</Text>
                 </TouchableOpacity>
+
+                {/* Share */}
+                <TouchableOpacity style={styles.iconWrap}>
+                    <Text style={styles.icon}>↗</Text>
+                    <Text style={styles.count}>{formatCount(item.shares)}</Text>
+                </TouchableOpacity>
+
+                {/* More */}
+                <TouchableOpacity style={styles.iconWrap}>
+                    <Text style={styles.icon}>⋯</Text>
+                </TouchableOpacity>
+            </View>
+
+            {/* ── Bottom content — above the tab bar ── */}
+            <View style={[styles.bottomSection, { bottom: bottomInset + 16 }]}>
+                <View style={styles.userRow}>
+                    <Text style={styles.username}>@{item.username}</Text>
+
+                    {item.verified && (
+                        <Text style={styles.verified}> ✔</Text>
+                    )}
+
+                    <TouchableOpacity style={styles.followBtn}>
+                        <Text style={styles.followText}>Follow</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <Text style={styles.caption}>{item.title}</Text>
+
+                <Text style={styles.music}>🎵 {item.music}</Text>
+
+                {paused && <Text style={styles.pauseText}>⏸ Paused</Text>}
             </View>
         </View>
     );
-};
+});
 
+// ─────────────────────────────────────────────
+// ReelsScreen
+// ─────────────────────────────────────────────
 export const ReelsScreen = () => {
+    const insets = useSafeAreaInsets();
+
+    // The reel page height fills the entire screen; content is offset with insets
+    const topInset = insets.top;
+    // Leave room for the tab bar + the device's own bottom safe-area padding
+    const bottomInset = TAB_BAR_HEIGHT + insets.bottom;
+
     const [activeIndex, setActiveIndex] = useState(0);
 
-    const onViewableItemsChanged = useCallback(
+    const onViewRef = useRef(
         ({ viewableItems }: { viewableItems: ViewToken[] }) => {
             if (viewableItems.length > 0) {
                 setActiveIndex(viewableItems[0].index ?? 0);
             }
         },
-        []
     );
 
-    const viewabilityConfig = { itemVisiblePercentThreshold: 60 };
+    const viewabilityConfig = { itemVisiblePercentThreshold: 80 };
+
+    const renderItem = useCallback(
+        ({ item, index }: { item: Reel; index: number }) => (
+            <ReelItem
+                item={item}
+                active={activeIndex === index}
+                topInset={topInset}
+                bottomInset={bottomInset}
+            />
+        ),
+        [activeIndex, topInset, bottomInset],
+    );
 
     return (
-        <FlatList
-            // data={REELS_DATA}
-            data={[]}
-            keyExtractor={r => r.id}
-            pagingEnabled
-            showsVerticalScrollIndicator={false}
-            snapToInterval={height}
-            decelerationRate="fast"
-            onViewableItemsChanged={onViewableItemsChanged}
-            viewabilityConfig={viewabilityConfig}
-            renderItem={({ item, index }) => (
-                <ReelItem reel={item} isActive={index === activeIndex} />
-            )}
-            getItemLayout={(_, index) => ({
-                length: height, offset: height * index, index
-            })}
-            windowSize={3}
-            removeClippedSubviews
-        />
+        <View style={styles.container}>
+            <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+
+            <FlatList
+                data={REELS_DATA}
+                keyExtractor={item => item.id}
+                renderItem={renderItem}
+                pagingEnabled
+                snapToInterval={height}
+                decelerationRate="fast"
+                showsVerticalScrollIndicator={false}
+                onViewableItemsChanged={onViewRef.current}
+                viewabilityConfig={viewabilityConfig}
+                windowSize={4}
+                initialNumToRender={2}
+                maxToRenderPerBatch={2}
+                removeClippedSubviews
+            />
+        </View>
     );
 };
 
-const s = StyleSheet.create({
-    reelContainer: { width, height, backgroundColor: '#000' },
+// ─────────────────────────────────────────────
+// Styles
+// ─────────────────────────────────────────────
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#000',
+    },
+
+    page: {
+        width,
+        height, // full screen — video bleeds edge-to-edge behind tab bar
+        backgroundColor: '#000',
+    },
+
     overlay: {
-        position: 'absolute', bottom: 80, left: 16, right: 80,
+        ...StyleSheet.absoluteFill,
+        backgroundColor: 'rgba(0,0,0,0.25)',
     },
-    badge: {
-        alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 3,
-        borderRadius: 6, borderWidth: 1, marginBottom: 8,
+
+    // header position is dynamic (topInset + 8)
+    header: {
+        position: 'absolute',
+        zIndex: 99,
+        width: '100%',
+        alignItems: 'center',
     },
-    badgeText: { fontSize: 10, fontWeight: '700' },
-    title: { fontSize: 16, fontWeight: '700', color: '#fff', marginBottom: 4 },
-    tag: { fontSize: 13, color: 'rgba(255,255,255,0.7)', marginTop: 2 },
-    actions: {
-        position: 'absolute', right: 12, bottom: 100,
-        alignItems: 'center', gap: 20,
+
+    headerText: {
+        color: '#fff',
+        fontSize: 22,
+        fontWeight: '800',
     },
-    action: { alignItems: 'center' },
-    actionIcon: { fontSize: 26, color: '#fff' },
-    actionCount: { fontSize: 12, color: '#fff', marginTop: 2 },
+
+    // rightActions bottom is dynamic
+    rightActions: {
+        position: 'absolute',
+        right: 12,
+        alignItems: 'center',
+    },
+
+    iconWrap: {
+        marginBottom: 20,
+        alignItems: 'center',
+    },
+
+    avatar: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        borderWidth: 2,
+        borderColor: '#fff',
+    },
+
+    icon: {
+        color: '#fff',
+        fontSize: 30,
+    },
+
+    count: {
+        color: '#fff',
+        marginTop: 4,
+        fontSize: 12,
+        fontWeight: '700',
+    },
+
+    // bottomSection bottom is dynamic
+    bottomSection: {
+        position: 'absolute',
+        left: 14,
+        right: 80,
+    },
+
+    userRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8,
+        flexWrap: 'wrap',
+    },
+
+    username: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '800',
+    },
+
+    verified: {
+        color: '#4da6ff',
+        fontSize: 15,
+        fontWeight: '700',
+    },
+
+    followBtn: {
+        marginLeft: 10,
+        borderWidth: 1,
+        borderColor: '#fff',
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+        borderRadius: 8,
+    },
+
+    followText: {
+        color: '#fff',
+        fontWeight: '700',
+        fontSize: 12,
+    },
+
+    caption: {
+        color: '#fff',
+        fontSize: 15,
+        lineHeight: 22,
+        marginBottom: 8,
+    },
+
+    music: {
+        color: '#ddd',
+        fontSize: 13,
+    },
+
+    pauseText: {
+        color: '#fff',
+        marginTop: 10,
+        fontWeight: '700',
+    },
 });

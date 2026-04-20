@@ -6,8 +6,11 @@ import {
     StatusBar,
     Animated,
     Easing,
+    Image,
+    ActivityIndicator,
 } from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
+import { Images } from '../assets/images';
 
 type Props = {
     navigation: any;
@@ -46,11 +49,10 @@ export const SplashScreen = ({ navigation }: Props) => {
     }, [navigation, opacityAnim, scaleAnim, textAnim]);
 
     return (
-        <ScreenWrapper backgroundColor="#0A0A18">
-            <StatusBar barStyle="light-content" backgroundColor="#0A0A18" />
+        <ScreenWrapper backgroundColor="#FDFBF6">
+            <StatusBar barStyle="dark-content" backgroundColor="#FDFBF6" />
 
             <View style={styles.container}>
-                {/* Logo */}
                 <Animated.View
                     style={[
                         styles.logoWrapper,
@@ -61,11 +63,14 @@ export const SplashScreen = ({ navigation }: Props) => {
                     ]}
                 >
                     <View style={styles.innerCircle}>
-                        <Text style={styles.logoEmoji}>🕉️</Text>
+                        <Image
+                            source={Images.splashScreenLogo}
+                            style={styles.logoImage}
+                            resizeMode="contain"
+                        />
                     </View>
                 </Animated.View>
 
-                {/* Title */}
                 <Animated.View
                     style={{
                         opacity: opacityAnim,
@@ -76,8 +81,13 @@ export const SplashScreen = ({ navigation }: Props) => {
                     <Text style={styles.subtitle}>Jain Spiritual Journey</Text>
                 </Animated.View>
 
-                {/* Footer */}
-                <Text style={styles.footer}>🙏 Jai Jinendra</Text>
+                {/* Loader */}
+                <View style={styles.footer}>
+                    <ActivityIndicator size="small" color="#D4AF37" />
+                    <Text style={styles.loadingText}>Loading...</Text>
+                </View>
+
+                {/* <Text style={styles.footer}>🙏 Jai Jinendra</Text> */}
             </View>
         </ScreenWrapper>
     );
@@ -92,51 +102,61 @@ const styles = StyleSheet.create({
     },
 
     logoWrapper: {
-        width: 130,
-        height: 130,
-        borderRadius: 65,
+        width: 180,
+        height: 180,
+        borderRadius: 90,
         borderWidth: 2,
-        borderColor: '#C8960C60',
+        borderColor: '#D4AF37',
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 28,
-        backgroundColor: '#13132A',
+        backgroundColor: '#FFF8E7',
+        elevation: 8,
     },
 
     innerCircle: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        backgroundColor: '#C8960C18',
+        width: 145,
+        height: 145,
+        borderRadius: 72,
+        backgroundColor: '#FFFFFF',
         justifyContent: 'center',
         alignItems: 'center',
     },
 
-    logoEmoji: {
-        fontSize: 54,
+    logoImage: {
+        width: 130,
+        height: 130,
     },
 
     title: {
         fontSize: 32,
         fontWeight: '800',
-        color: '#E8D5B7',
+        color: '#8B5E00',
         textAlign: 'center',
-        letterSpacing: 0.8,
     },
 
     subtitle: {
         fontSize: 14,
-        color: '#8B9ABB',
+        color: '#7A7A7A',
         marginTop: 10,
         textAlign: 'center',
-        letterSpacing: 1,
+    },
+
+    loaderContainer: {
+        marginTop: 30,
+        alignItems: 'center',
+    },
+
+    loadingText: {
+        marginTop: 8,
+        fontSize: 13,
+        color: '#9C7C38',
     },
 
     footer: {
         position: 'absolute',
         bottom: 40,
-        color: '#4A5568',
+        color: '#9C7C38',
         fontSize: 13,
-        letterSpacing: 1,
     },
 });

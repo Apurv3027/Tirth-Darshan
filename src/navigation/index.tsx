@@ -8,7 +8,7 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { TirthankarListScreen } from '../screens/TirthankarListScreen';
 import { TirthankarProfileScreen } from '../screens/TirthankarProfileScreen';
 import { TirthDetailScreen } from '../screens/TirthDetailScreen';
-// import { ReelsScreen } from '../screens/ReelsScreen';
+import { ReelsScreen } from '../screens/ReelsScreen';
 import { SplashScreen } from '../screens/SplashScreen';
 
 // ── Type definitions ──
@@ -33,26 +33,47 @@ const TabNavigator = () => (
     <Tab.Navigator
         screenOptions={{
             headerShown: false,
-            tabBarStyle: { backgroundColor: '#0D0D1A', borderTopColor: '#1A1A2E' },
-            tabBarActiveTintColor: '#6B8CFF',
-            tabBarInactiveTintColor: '#555',
+            tabBarStyle: {
+                backgroundColor: '#FFFFFF',
+                borderTopColor: '#F1E4C7',
+                height: 62,
+                paddingBottom: 6,
+                paddingTop: 6,
+            },
+            tabBarActiveTintColor: '#C8960C',
+            tabBarInactiveTintColor: '#9CA3AF',
+            tabBarLabelStyle: {
+                fontSize: 12,
+                fontWeight: '600',
+            },
         }}
     >
         <Tab.Screen
             name="Home"
             component={HomeScreen}
-            options={{ tabBarIcon: () => <Text>🏠</Text>, tabBarLabel: 'Home' }}
+            options={{
+                tabBarIcon: () => <Text style={{ fontSize: 18 }}>🏠</Text>,
+                tabBarLabel: 'Home',
+            }}
         />
+
         <Tab.Screen
             name="TirthankarList"
             component={TirthankarListScreen}
-            options={{ tabBarIcon: () => <Text>🕉️</Text>, tabBarLabel: 'Tirthankars' }}
+            options={{
+                tabBarIcon: () => <Text style={{ fontSize: 18 }}>🕉️</Text>,
+                tabBarLabel: 'Tirthankars',
+            }}
         />
-        {/* <Tab.Screen
+
+        <Tab.Screen
             name="Reels"
             component={ReelsScreen}
-            options={{ tabBarIcon: () => <Text>▶️</Text>, tabBarLabel: 'Reels' }}
-        /> */}
+            options={{
+                tabBarIcon: () => <Text style={{ fontSize: 18 }}>▶️</Text>,
+                tabBarLabel: 'Reels',
+            }}
+        />
     </Tab.Navigator>
 );
 
@@ -61,8 +82,14 @@ export const AppNavigator = () => (
     <NavigationContainer>
         <Stack.Navigator
             screenOptions={{
-                headerStyle: { backgroundColor: '#0D0D1A' },
-                headerTintColor: '#E8D5B7',
+                headerStyle: {
+                    backgroundColor: '#FFFFFF',
+                },
+                headerTintColor: '#8B5E00',
+                headerShadowVisible: false,
+                contentStyle: {
+                    backgroundColor: '#FDFBF6',
+                },
                 headerShown: false,
             }}
         >
@@ -70,7 +97,12 @@ export const AppNavigator = () => (
                 name="Splash"
                 component={SplashScreen}
             />
-            <Stack.Screen name="MainTabs" component={TabNavigator} />
+
+            <Stack.Screen
+                name="MainTabs"
+                component={TabNavigator}
+            />
+
             <Stack.Screen
                 name="TirthankarProfile"
                 component={TirthankarProfileScreen}
@@ -78,8 +110,14 @@ export const AppNavigator = () => (
                     headerShown: false,
                 }}
             />
-            <Stack.Screen name="TirthDetail" component={TirthDetailScreen}
-                options={{ headerShown: true, title: '' }} />
+
+            <Stack.Screen
+                name="TirthDetail"
+                component={TirthDetailScreen}
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack.Navigator>
     </NavigationContainer>
 );

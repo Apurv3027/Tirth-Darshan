@@ -9,7 +9,7 @@ import ScreenWrapper from '../components/ScreenWrapper';
 
 export const HomeScreen = () => {
     return (
-        <ScreenWrapper scroll backgroundColor="#0A0A18">
+        <ScreenWrapper scroll backgroundColor="#FDFBF6">
             <View style={styles.container}>
                 {/* Header */}
                 <View style={styles.header}>
@@ -96,29 +96,30 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
         fontWeight: '800',
-        color: '#E8D5B7',
+        color: '#8B5E00',
         letterSpacing: 0.5,
     },
 
     subtitle: {
         fontSize: 14,
-        color: '#7B7B94',
+        color: '#6B7280',
         marginTop: 8,
         lineHeight: 22,
     },
 
     quoteCard: {
-        backgroundColor: '#13132A',
+        backgroundColor: '#FFFFFF',
         borderRadius: 18,
         padding: 18,
         borderWidth: 1,
-        borderColor: '#1E1E3F',
+        borderColor: '#F1E4C7',
         marginBottom: 24,
+        elevation: 3,
     },
 
     quoteText: {
         fontSize: 18,
-        color: '#E8D5B7',
+        color: '#5B3A00',
         fontWeight: '700',
         lineHeight: 28,
     },
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
 
     sectionTitle: {
         fontSize: 15,
-        color: '#8B9ABB',
+        color: '#7A7A7A',
         fontWeight: '700',
         marginBottom: 14,
         letterSpacing: 0.5,
@@ -147,12 +148,13 @@ const styles = StyleSheet.create({
 
     card: {
         width: '48%',
-        backgroundColor: '#13132A',
+        backgroundColor: '#FFFFFF',
         borderRadius: 18,
         padding: 16,
         marginBottom: 14,
         borderWidth: 1,
-        borderColor: '#1E1E3F',
+        borderColor: '#F3E8D0',
+        elevation: 2,
     },
 
     cardEmoji: {
@@ -162,34 +164,34 @@ const styles = StyleSheet.create({
 
     cardTitle: {
         fontSize: 15,
-        color: '#E8D5B7',
+        color: '#8B5E00',
         fontWeight: '700',
         marginBottom: 6,
     },
 
     cardDesc: {
         fontSize: 12,
-        color: '#7B7B94',
+        color: '#6B7280',
         lineHeight: 18,
     },
 
     thoughtCard: {
-        backgroundColor: '#C8960C12',
+        backgroundColor: '#FFF8E7',
         borderWidth: 1,
-        borderColor: '#C8960C30',
+        borderColor: '#F1D68A',
         borderRadius: 16,
         padding: 18,
     },
 
     thoughtText: {
         fontSize: 14,
-        color: '#D9C8A4',
+        color: '#6B4F00',
         lineHeight: 24,
     },
 
     footer: {
         textAlign: 'center',
-        color: '#32324F',
+        color: '#A68A54',
         marginTop: 30,
         fontSize: 13,
         letterSpacing: 1,
