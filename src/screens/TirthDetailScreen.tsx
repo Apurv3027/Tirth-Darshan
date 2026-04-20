@@ -1,139 +1,488 @@
 import React, { useState } from 'react';
 import {
-    ScrollView, View, Text, Image, StyleSheet,
-    TouchableOpacity, Dimensions, FlatList,
+    ScrollView,
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+    Dimensions,
+    FlatList,
+    Platform,
+    GestureResponderEvent,
 } from 'react-native';
 import Video from 'react-native-video';
-import { useRoute } from '@react-navigation/native';
+import {
+    useNavigation,
+    useRoute,
+    RouteProp,
+} from '@react-navigation/native';
 import { TIRTHS } from '../data/tirths';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 const { width } = Dimensions.get('window');
 
-const Tab = ({ label, active, onPress }) => (
-    <TouchableOpacity style={[s.tab, active && s.tabActive]} onPress={onPress}>
-        <Text style={[s.tabText, active && s.tabTextActive]}>{label}</Text>
+/* ---------------- TYPES ---------------- */
+
+type RootStackParamList = {
+    TirthDetail: {
+        id: string;
+    };
+};
+
+type TirthDetailRouteProp = RouteProp<RootStackParamList, 'TirthDetail'>;
+
+type TabKey = 'info' | 'reach' | 'gallery' | 'vr';
+
+type TabProps = {
+    label: string;
+    active: boolean;
+    icon: string;
+    onPress: (event: GestureResponderEvent) => void;
+};
+
+type InfoCardProps = {
+    title: string;
+    value: string;
+};
+
+/* ---------------- COMPONENTS ---------------- */
+
+const Tab = ({ label, active, onPress, icon }: TabProps) => (
+    <TouchableOpacity
+        style={[s.tab, active && s.tabActive]}
+        onPress={onPress}
+        activeOpacity={0.8}
+    >
+        <Text style={s.tabIcon}>{icon}</Text>
+        <Text style={[s.tabText, active && s.tabTextActive]}>
+            {label}
+        </Text>
     </TouchableOpacity>
 );
 
+const InfoCard = ({ title, value }: InfoCardProps) => (
+    <View style={s.infoCard}>
+        <Text style={s.infoTitle}>{title}</Text>
+        <Text style={s.infoValue}>{value}</Text>
+    </View>
+);
+
+/* ---------------- SCREEN ---------------- */
+
 export const TirthDetailScreen = () => {
-    const { params } = useRoute();
-    const tirth = TIRTHS.find(t => t.id === params.id)!;
-    const [tab, setTab] = useState<'info' | 'reach' | 'gallery' | 'vr'>('info');
+    const nav = useNavigation();
+    const { params } = useRoute<TirthDetailRouteProp>();
+
+    const tirth = TIRTHS.find(
+        t =>
+            t.id === params.id ||
+            t.name.toLowerCase() === params.id.toLowerCase()
+    );
+
+    const [tab, setTab] = useState<TabKey>('info');
     const [vrActive, setVrActive] = useState(false);
 
+    if (!tirth) {
+        return (
+            <ScreenWrapper backgroundColor="#FDFBF6">
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text>Tirth not found</Text>
+                </View>
+            </ScreenWrapper>
+        );
+    }
+
+    const TABS: { key: TabKey; label: string; icon: string }[] = [
+        { key: 'info', label: 'Info', icon: '📜' },
+        { key: 'reach', label: 'Reach', icon: '🚗' },
+        { key: 'gallery', label: 'Photos', icon: '🖼️' },
+        { key: 'vr', label: 'VR', icon: '🕶️' },
+    ];
+
     return (
-        <ScrollView style={s.container} stickyHeaderIndices={[1]}>
-
-            {/* Gallery hero */}
-            <FlatList
-                data={tirth.gallery}
-                horizontal
-                pagingEnabled
-                keyExtractor={(_, i) => String(i)}
-                renderItem={({ item }) => (
-                    <Image source={{ uri: item }} style={s.heroImage} resizeMode="cover" />
-                )}
-                showsHorizontalScrollIndicator={false}
-            />
-
-            {/* Tabs (sticky) */}
-            <View style={s.tabs}>
-                {(['info', 'reach', 'gallery', 'vr'] as const).map(t => (
-                    <Tab key={t} label={t.toUpperCase()} active={tab === t} onPress={() => setTab(t)} />
-                ))}
-            </View>
-
+        <ScreenWrapper backgroundColor="#FDFBF6">
             {/* Header */}
-            <View style={s.header}>
-                <Text style={s.name}>{tirth.name}</Text>
-                <Text style={s.location}>📍 {tirth.location}</Text>
+            <View style={s.topBar}>
+                <TouchableOpacity style={s.iconBtn} onPress={() => nav.goBack()}>
+                    <Text style={s.iconText}>←</Text>
+                </TouchableOpacity>
+
+                <Text style={s.topTitle} numberOfLines={1}>
+                    {tirth.name}
+                </Text>
+
+                <View style={s.iconBtnPlaceholder} />
             </View>
 
-            {/* Tab content */}
-            {tab === 'info' && (
-                <View style={s.section}>
-                    <Text style={s.sectionTitle}>History</Text>
-                    <Text style={s.body}>{tirth.history}</Text>
-                    <Text style={s.sectionTitle}>Spiritual Significance (Mahima)</Text>
-                    <Text style={s.body}>{tirth.mahima}</Text>
-                    <Text style={s.sectionTitle}>Best Time to Visit</Text>
-                    <Text style={s.body}>{tirth.bestTimeToVisit}</Text>
-                </View>
-            )}
+            <ScrollView
+                style={s.container}
+                stickyHeaderIndices={[2]}
+                showsVerticalScrollIndicator={false}
+            >
+                {/* Hero Slider */}
+                <FlatList
+                    data={tirth.gallery}
+                    horizontal
+                    pagingEnabled
+                    keyExtractor={(_, i) => String(i)}
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                        <Image
+                            source={{ uri: item }}
+                            style={s.heroImage}
+                            resizeMode="cover"
+                        />
+                    )}
+                />
 
-            {tab === 'reach' && (
-                <View style={s.section}>
-                    {(['road', 'rail', 'air'] as const).map(mode => (
-                        <View key={mode} style={s.reachCard}>
-                            <Text style={s.reachIcon}>
-                                {mode === 'road' ? '🚌' : mode === 'rail' ? '🚂' : '✈️'}
-                            </Text>
-                            <View style={{ flex: 1 }}>
-                                <Text style={s.reachMode}>{mode.toUpperCase()}</Text>
-                                <Text style={s.body}>{tirth.howToReach[mode]}</Text>
-                            </View>
-                        </View>
-                    ))}
-                </View>
-            )}
+                {/* Hero Content */}
+                <View style={s.heroContent}>
+                    <View style={s.badge}>
+                        <Text style={s.badgeText}>🛕 Sacred Jain Tirth</Text>
+                    </View>
 
-            {tab === 'gallery' && (
-                <View style={s.galleryGrid}>
-                    {tirth.gallery.map((url, i) => (
-                        <Image key={i} source={{ uri: url }} style={s.thumb} />
-                    ))}
-                </View>
-            )}
+                    <Text style={s.name}>{tirth.name}</Text>
 
-            {tab === 'vr' && (
-                <View style={s.section}>
-                    {tirth.hasVRDarshan ? (
+                    <Text style={s.location}>
+                        📍 {tirth.location}, {tirth.state}
+                    </Text>
+
+                    <View style={s.quickRow}>
+                        <InfoCard title="Nearest City" value={tirth.nearestCity} />
+                        <InfoCard title="Best Season" value={tirth.bestTimeToVisit} />
+                    </View>
+                </View>
+
+                {/* Tabs */}
+                <View style={s.tabsWrap}>
+                    <View style={s.tabs}>
+                        {TABS.map(item => (
+                            <Tab
+                                key={item.key}
+                                label={item.label}
+                                icon={item.icon}
+                                active={tab === item.key}
+                                onPress={() => setTab(item.key)}
+                            />
+                        ))}
+                    </View>
+                </View>
+
+                {/* Content */}
+                <View style={s.content}>
+                    {tab === 'info' && (
                         <>
-                            <Text style={s.body}>360° VR Darshan available</Text>
-                            <TouchableOpacity
-                                style={s.vrBtn}
-                                onPress={() => setVrActive(true)}
-                            >
-                                <Text style={s.vrBtnText}>Enter VR Darshan</Text>
-                            </TouchableOpacity>
-                            {vrActive && (
-                                <Video
-                                    source={{ uri: tirth.vrDarshanUrl! }}
-                                    style={s.vrPlayer}
-                                    resizeMode="cover"
-                                    controls
-                                />
-                            )}
+                            <View style={s.card}>
+                                <Text style={s.sectionTitle}>📜 History</Text>
+                                <Text style={s.body}>{tirth.history}</Text>
+                            </View>
+
+                            <View style={s.card}>
+                                <Text style={s.sectionTitle}>✨ Spiritual Mahima</Text>
+                                <Text style={s.body}>{tirth.mahima}</Text>
+                            </View>
                         </>
-                    ) : (
-                        <Text style={s.body}>VR Darshan coming soon for this Tirth.</Text>
+                    )}
+
+                    {tab === 'reach' &&
+                        (['road', 'rail', 'air'] as const).map(mode => (
+                            <View key={mode} style={s.transportCard}>
+                                <Text style={s.transportEmoji}>
+                                    {mode === 'road'
+                                        ? '🚌'
+                                        : mode === 'rail'
+                                            ? '🚆'
+                                            : '✈️'}
+                                </Text>
+
+                                <View style={{ flex: 1 }}>
+                                    <Text style={s.transportTitle}>
+                                        {mode.toUpperCase()}
+                                    </Text>
+
+                                    <Text style={s.body}>
+                                        {tirth.howToReach[mode]}
+                                    </Text>
+                                </View>
+                            </View>
+                        ))}
+
+                    {tab === 'gallery' && (
+                        <View style={s.galleryGrid}>
+                            {tirth.gallery.map((img, i) => (
+                                <Image
+                                    key={i}
+                                    source={{ uri: img }}
+                                    style={s.thumb}
+                                />
+                            ))}
+                        </View>
+                    )}
+
+                    {tab === 'vr' && (
+                        <View style={s.card}>
+                            {tirth.hasVRDarshan ? (
+                                <>
+                                    <Text style={s.sectionTitle}>🕶️ 360° VR Darshan</Text>
+
+                                    <Text style={s.body}>
+                                        Experience immersive temple darshan.
+                                    </Text>
+
+                                    <TouchableOpacity
+                                        style={s.vrBtn}
+                                        onPress={() => setVrActive(true)}
+                                    >
+                                        <Text style={s.vrBtnText}>
+                                            Enter VR Darshan
+                                        </Text>
+                                    </TouchableOpacity>
+
+                                    {vrActive && (
+                                        <Video
+                                            source={{ uri: tirth.vrDarshanUrl! }}
+                                            style={s.vrPlayer}
+                                            controls
+                                            resizeMode="cover"
+                                        />
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <Text style={s.sectionTitle}>🕶️ VR Darshan</Text>
+                                    <Text style={s.body}>
+                                        Coming soon for this Tirth.
+                                    </Text>
+                                </>
+                            )}
+                        </View>
                     )}
                 </View>
-            )}
-        </ScrollView>
+
+                <Text style={s.footer}>🕉️ Jai Jinendra</Text>
+            </ScrollView>
+        </ScreenWrapper>
     );
 };
 
+/* ---------------- STYLES ---------------- */
+
 const s = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#0D0D1A' },
+    container: { flex: 1, backgroundColor: '#FDFBF6' },
+
+    topBar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingTop: Platform.OS === 'ios' ? 55 : 15,
+        paddingHorizontal: 16,
+        paddingBottom: 12,
+        backgroundColor: '#FDFBF6',
+        borderBottomWidth: 1,
+        borderBottomColor: '#F1E4C7',
+    },
+
+    iconBtn: {
+        width: 36,
+        height: 36,
+        borderRadius: 12,
+        backgroundColor: '#FFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    iconBtnPlaceholder: { width: 36 },
+
+    iconText: {
+        fontSize: 18,
+        color: '#8B5E00',
+        fontWeight: '700',
+    },
+
+    topTitle: {
+        flex: 1,
+        textAlign: 'center',
+        fontSize: 15,
+        fontWeight: '800',
+        color: '#5B3A00',
+        marginHorizontal: 10,
+    },
+
     heroImage: { width, height: 260 },
-    tabs: { flexDirection: 'row', backgroundColor: '#0D0D1A', paddingHorizontal: 8, paddingTop: 8 },
-    tab: { flex: 1, paddingVertical: 10, alignItems: 'center', borderBottomWidth: 2, borderColor: 'transparent' },
-    tabActive: { borderColor: '#6B8CFF' },
-    tabText: { fontSize: 11, color: '#666', fontWeight: '600' },
-    tabTextActive: { color: '#6B8CFF' },
-    header: { padding: 16 },
-    name: { fontSize: 24, fontWeight: '800', color: '#E8D5B7' },
-    location: { fontSize: 13, color: '#888', marginTop: 4 },
-    section: { padding: 16 },
-    sectionTitle: { fontSize: 12, fontWeight: '700', color: '#6B8CFF', letterSpacing: 1, marginTop: 16, marginBottom: 6 },
-    body: { fontSize: 14, color: '#C0B8A8', lineHeight: 22 },
-    reachCard: { flexDirection: 'row', gap: 12, padding: 12, backgroundColor: '#1A1A2E', borderRadius: 12, marginBottom: 10 },
-    reachIcon: { fontSize: 24 },
-    reachMode: { fontSize: 11, color: '#6B8CFF', fontWeight: '700', marginBottom: 4 },
-    galleryGrid: { flexDirection: 'row', flexWrap: 'wrap', padding: 4 },
-    thumb: { width: (width - 24) / 3, height: (width - 24) / 3, margin: 2, borderRadius: 8 },
-    vrBtn: { backgroundColor: '#6B8CFF', padding: 16, borderRadius: 14, alignItems: 'center', marginTop: 16 },
-    vrBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
-    vrPlayer: { width: '100%', height: 220, borderRadius: 12, marginTop: 12 },
+
+    heroContent: { padding: 16 },
+
+    badge: {
+        alignSelf: 'flex-start',
+        backgroundColor: '#FFF5D8',
+        borderRadius: 30,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        marginBottom: 12,
+    },
+
+    badgeText: {
+        fontSize: 12,
+        color: '#C8960C',
+        fontWeight: '700',
+    },
+
+    name: {
+        fontSize: 26,
+        fontWeight: '800',
+        color: '#5B3A00',
+    },
+
+    location: {
+        marginTop: 6,
+        fontSize: 14,
+        color: '#7A7A7A',
+    },
+
+    quickRow: {
+        flexDirection: 'row',
+        gap: 10,
+        marginTop: 16,
+    },
+
+    infoCard: {
+        flex: 1,
+        backgroundColor: '#FFF',
+        borderRadius: 14,
+        padding: 14,
+    },
+
+    infoTitle: {
+        fontSize: 11,
+        color: '#8A8A8A',
+        marginBottom: 6,
+    },
+
+    infoValue: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: '#5B3A00',
+    },
+
+    tabsWrap: {
+        backgroundColor: '#FDFBF6',
+        paddingHorizontal: 14,
+        paddingBottom: 10,
+    },
+
+    tabs: {
+        flexDirection: 'row',
+        backgroundColor: '#FFF8E7',
+        borderRadius: 18,
+        padding: 6,
+    },
+
+    tab: {
+        flex: 1,
+        paddingVertical: 10,
+        borderRadius: 14,
+        alignItems: 'center',
+    },
+
+    tabActive: {
+        backgroundColor: '#C8960C',
+    },
+
+    tabIcon: {
+        fontSize: 14,
+        marginBottom: 2,
+    },
+
+    tabText: {
+        fontSize: 11,
+        fontWeight: '700',
+        color: '#8A8A8A',
+    },
+
+    tabTextActive: {
+        color: '#FFF',
+    },
+
+    content: {
+        padding: 16,
+    },
+
+    card: {
+        backgroundColor: '#FFF',
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 12,
+    },
+
+    sectionTitle: {
+        fontSize: 13,
+        fontWeight: '800',
+        color: '#C8960C',
+        marginBottom: 8,
+    },
+
+    body: {
+        fontSize: 14,
+        color: '#5B3A00',
+        lineHeight: 22,
+    },
+
+    transportCard: {
+        flexDirection: 'row',
+        gap: 14,
+        backgroundColor: '#FFF',
+        padding: 16,
+        borderRadius: 16,
+        marginBottom: 12,
+    },
+
+    transportEmoji: { fontSize: 26 },
+
+    transportTitle: {
+        fontSize: 12,
+        fontWeight: '800',
+        color: '#C8960C',
+        marginBottom: 4,
+    },
+
+    galleryGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 4,
+    },
+
+    thumb: {
+        width: (width - 24) / 3,
+        height: (width - 24) / 3,
+        margin: 2,
+        borderRadius: 10,
+    },
+
+    vrBtn: {
+        marginTop: 14,
+        backgroundColor: '#C8960C',
+        paddingVertical: 14,
+        borderRadius: 14,
+        alignItems: 'center',
+    },
+
+    vrBtnText: {
+        color: '#FFF',
+        fontWeight: '800',
+        fontSize: 15,
+    },
+
+    vrPlayer: {
+        width: '100%',
+        height: 220,
+        marginTop: 14,
+        borderRadius: 14,
+    },
+
+    footer: {
+        textAlign: 'center',
+        paddingVertical: 30,
+        color: '#A68A54',
+        letterSpacing: 2,
+    },
 });

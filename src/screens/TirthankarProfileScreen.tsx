@@ -104,13 +104,12 @@ export const TirthankarProfileScreen = () => {
         });
     };
 
-    const goToTirth = (tirthName: string) => {
-        // Navigate to TirthDetail — pass name as search query for v1
-        nav.navigate('TirthDetail', { id: tirthName.toLowerCase().replace(/\s+/g, '_') });
+    const goToTirth = (tirthId: string) => {
+        nav.navigate('TirthDetail', { id: tirthId });
     };
 
     return (
-        <ScreenWrapper backgroundColor="#0A0A18">
+        <ScreenWrapper backgroundColor="#FDFBF6">
             {/* <StatusBar barStyle="light-content" backgroundColor="#0A0A18" /> */}
 
             {/* ── Custom header ── */}
@@ -197,18 +196,29 @@ export const TirthankarProfileScreen = () => {
                 </View>
 
                 {/* ── Sticky Tabs ── */}
-                <View style={s.tabs}>
-                    {TABS.map(tab => (
-                        <TouchableOpacity
-                            key={tab}
-                            style={[s.tab, activeTab === tab && s.tabActive]}
-                            onPress={() => setActiveTab(tab)}
-                        >
-                            <Text style={[s.tabText, activeTab === tab && s.tabTextActive]}>
-                                {tab}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
+                <View style={s.tabsWrapper}>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={s.tabsScroll}
+                    >
+                        {TABS.map(tab => {
+                            const active = activeTab === tab;
+
+                            return (
+                                <TouchableOpacity
+                                    key={tab}
+                                    activeOpacity={0.85}
+                                    style={[s.tabPill, active && s.tabPillActive]}
+                                    onPress={() => setActiveTab(tab)}
+                                >
+                                    <Text style={[s.tabPillText, active && s.tabPillTextActive]}>
+                                        {tab}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+                    </ScrollView>
                 </View>
 
                 {/* ── Tab Content ── */}
@@ -323,19 +333,22 @@ export const TirthankarProfileScreen = () => {
 const s = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#0A0A18',
+        backgroundColor: '#FDFBF6',
     },
+
     scroll: {
         flex: 1,
     },
+
     errorContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#0A0A18',
+        backgroundColor: '#FDFBF6',
     },
+
     errorText: {
-        color: '#6B7280',
+        color: '#7A7A7A',
         fontSize: 16,
     },
 
@@ -346,39 +359,48 @@ const s = StyleSheet.create({
         paddingTop: Platform.OS === 'ios' ? 56 : 16,
         paddingBottom: 12,
         paddingHorizontal: 16,
-        backgroundColor: '#0A0A18',
+        backgroundColor: '#FDFBF6',
         borderBottomWidth: 1,
-        borderBottomColor: '#13132A',
+        borderBottomColor: '#F1E4C7',
     },
+
     backBtn: {
         width: 36,
         height: 36,
         borderRadius: 10,
-        backgroundColor: '#13132A',
+        backgroundColor: '#FFFFFF',
         justifyContent: 'center',
         alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#F1E4C7',
     },
+
     backArrow: {
-        color: '#E8D5B7',
+        color: '#8B5E00',
         fontSize: 18,
         fontWeight: '600',
     },
+
     topBarTitle: {
         flex: 1,
-        color: '#E8D5B7',
+        color: '#5B3A00',
         fontSize: 15,
         fontWeight: '700',
         textAlign: 'center',
         marginHorizontal: 12,
     },
+
     shareBtn: {
         width: 36,
         height: 36,
         borderRadius: 10,
-        backgroundColor: '#13132A',
+        backgroundColor: '#FFFFFF',
         justifyContent: 'center',
         alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#F1E4C7',
     },
+
     shareIcon: {
         color: '#C8960C',
         fontSize: 16,
@@ -391,26 +413,30 @@ const s = StyleSheet.create({
         paddingTop: 28,
         paddingBottom: 20,
         paddingHorizontal: 20,
-        backgroundColor: '#0D0D20',
+        backgroundColor: '#FFF8E7',
     },
+
     prevNextRow: {
         flexDirection: 'row',
         width: '100%',
         marginBottom: 16,
     },
+
     prevNextBtn: {
-        backgroundColor: '#13132A',
+        backgroundColor: '#FFFFFF',
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 8,
         borderWidth: 1,
-        borderColor: '#1E1E3F',
+        borderColor: '#F1E4C7',
     },
+
     prevNextText: {
-        color: '#6B8CFF',
+        color: '#8B5E00',
         fontSize: 12,
         fontWeight: '600',
     },
+
     emojiRing: {
         width: 110,
         height: 110,
@@ -420,6 +446,7 @@ const s = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 16,
     },
+
     emojiInner: {
         width: 90,
         height: 90,
@@ -427,86 +454,98 @@ const s = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+
     heroEmoji: {
         fontSize: 48,
     },
+
     heroOrdinal: {
         fontSize: 11,
-        color: '#6B7280',
+        color: '#8A8A8A',
         letterSpacing: 2,
         textTransform: 'uppercase',
         marginBottom: 6,
     },
+
     heroName: {
         fontSize: 26,
         fontWeight: '800',
-        color: '#E8D5B7',
+        color: '#5B3A00',
         textAlign: 'center',
-        letterSpacing: 0.3,
     },
+
     heroGuj: {
         fontSize: 17,
-        color: '#8B7355',
+        color: '#9C7C38',
         marginTop: 4,
         marginBottom: 14,
         textAlign: 'center',
     },
+
     pillRow: {
         flexDirection: 'row',
         gap: 8,
         marginBottom: 16,
     },
+
     pill: {
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 8,
         borderWidth: 1,
     },
+
     pillText: {
         fontSize: 12,
         fontWeight: '700',
     },
+
     pillSymbol: {
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 8,
-        backgroundColor: '#13132A',
+        backgroundColor: '#FFFFFF',
         borderWidth: 1,
-        borderColor: '#1E1E3F',
+        borderColor: '#F1E4C7',
     },
+
     pillSymbolText: {
         fontSize: 12,
-        color: '#8B9ABB',
+        color: '#7A7A7A',
         fontWeight: '600',
     },
 
     // Yaksha row
     yakshaRow: {
         flexDirection: 'row',
-        backgroundColor: '#13132A',
+        backgroundColor: '#FFFFFF',
         borderRadius: 14,
         paddingVertical: 12,
         paddingHorizontal: 16,
         width: '100%',
         borderWidth: 1,
-        borderColor: '#1E1E3F',
+        borderColor: '#F1E4C7',
     },
+
     yakshaBox: {
         flex: 1,
         alignItems: 'center',
     },
+
     yakshaDivider: {
         width: 1,
-        backgroundColor: '#1E1E3F',
+        backgroundColor: '#F1E4C7',
         marginHorizontal: 12,
     },
+
     yakshaRole: {
         fontSize: 10,
-        color: '#4A5568',
+        color: '#8A8A8A',
         letterSpacing: 0.5,
         textTransform: 'uppercase',
         marginBottom: 4,
     },
+
     yakshaName: {
         fontSize: 13,
         color: '#C8960C',
@@ -515,133 +554,152 @@ const s = StyleSheet.create({
     },
 
     // Tabs
-    tabs: {
-        flexDirection: 'row',
-        backgroundColor: '#0A0A18',
-        paddingHorizontal: 16,
-        paddingTop: 12,
+    tabsWrapper: {
+        backgroundColor: '#FDFBF6',
+        paddingTop: 10,
+        paddingBottom: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#13132A',
-    },
-    tab: {
-        flex: 1,
-        paddingVertical: 10,
-        alignItems: 'center',
-        borderBottomWidth: 2,
-        borderBottomColor: 'transparent',
-    },
-    tabActive: {
-        borderBottomColor: '#C8960C',
-    },
-    tabText: {
-        fontSize: 12,
-        color: '#4A5568',
-        fontWeight: '600',
-    },
-    tabTextActive: {
-        color: '#C8960C',
+        borderBottomColor: '#F1E4C7',
     },
 
-    // Tab content
+    tabsScroll: {
+        paddingHorizontal: 14,
+    },
+
+    tabPill: {
+        paddingVertical: 10,
+        paddingHorizontal: 18,
+        borderRadius: 30,
+        backgroundColor: '#FFFFFF',
+        marginRight: 10,
+        borderWidth: 1,
+        borderColor: '#F1E4C7',
+        shadowColor: '#000',
+        shadowOpacity: 0.04,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
+        elevation: 2,
+    },
+
+    tabPillActive: {
+        backgroundColor: '#C8960C',
+        borderColor: '#C8960C',
+        transform: [{ scale: 1.03 }],
+    },
+
+    tabPillText: {
+        fontSize: 13,
+        fontWeight: '700',
+        color: '#8A8A8A',
+    },
+
+    tabPillTextActive: {
+        color: '#FFFFFF',
+    },
+
+    // Content
     tabContent: {
         padding: 16,
         gap: 12,
     },
 
-    // Section card
     sectionCard: {
-        backgroundColor: '#13132A',
+        backgroundColor: '#FFFFFF',
         borderRadius: 16,
         padding: 16,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: '#1E1E3F',
+        borderColor: '#F1E4C7',
     },
+
     sectionHeader: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 14,
     },
+
     sectionIcon: {
         fontSize: 16,
         marginRight: 8,
     },
+
     sectionTitle: {
         fontSize: 12,
         fontWeight: '700',
-        color: '#8B9ABB',
+        color: '#8B5E00',
         letterSpacing: 1,
         textTransform: 'uppercase',
     },
 
-    // Info rows
     infoRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'flex-start',
         paddingVertical: 9,
         borderBottomWidth: 1,
-        borderBottomColor: '#1A1A32',
+        borderBottomColor: '#F7EED8',
     },
+
     infoLabel: {
         fontSize: 13,
-        color: '#4A5568',
+        color: '#7A7A7A',
         flex: 1,
     },
+
     infoValue: {
         fontSize: 13,
-        color: '#C8B98A',
+        color: '#5B3A00',
         flex: 1.4,
         textAlign: 'right',
         fontWeight: '500',
     },
+
     infoValueAccent: {
         color: '#C8960C',
         fontWeight: '700',
     },
 
-    // Significance
     significanceText: {
         fontSize: 14,
-        color: '#A89878',
+        color: '#5B3A00',
         lineHeight: 22,
     },
 
-    // Special note (Mallinath)
     specialNote: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#2980B920',
+        backgroundColor: '#EAF4FF',
         borderRadius: 12,
         padding: 14,
         borderWidth: 1,
-        borderColor: '#2980B940',
+        borderColor: '#B6D8FF',
         gap: 10,
     },
+
     specialNoteIcon: {
         fontSize: 20,
     },
+
     specialNoteText: {
         fontSize: 13,
-        color: '#7DB6E8',
+        color: '#2563EB',
         fontWeight: '600',
         flex: 1,
         lineHeight: 20,
     },
 
-    // Kalyanak
     kalyanakIntro: {
         fontSize: 12,
-        color: '#4A5568',
+        color: '#7A7A7A',
         marginBottom: 12,
         fontStyle: 'italic',
     },
+
     kalyanakRow: {
         flexDirection: 'row',
-        alignItems: 'flex-start',
         marginBottom: 12,
         gap: 10,
     },
+
     kalyanakDot: {
         width: 8,
         height: 8,
@@ -649,104 +707,107 @@ const s = StyleSheet.create({
         backgroundColor: '#C8960C',
         marginTop: 5,
     },
+
     kalyanakLabel: {
         fontSize: 11,
-        color: '#6B7280',
-        letterSpacing: 0.5,
+        color: '#8A8A8A',
         textTransform: 'uppercase',
     },
+
     kalyanakPlace: {
         fontSize: 13,
-        color: '#C8B98A',
+        color: '#5B3A00',
         fontWeight: '600',
         marginTop: 2,
     },
 
-    // Teachings
     teachingRow: {
         flexDirection: 'row',
-        alignItems: 'flex-start',
         marginBottom: 14,
         gap: 12,
     },
+
     teachingBullet: {
         width: 22,
         height: 22,
         borderRadius: 11,
-        backgroundColor: '#C8960C20',
+        backgroundColor: '#FFF3D6',
         borderWidth: 1,
-        borderColor: '#C8960C50',
+        borderColor: '#F1D68A',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 1,
     },
+
     teachingBulletText: {
         fontSize: 10,
         color: '#C8960C',
         fontWeight: '800',
     },
+
     teachingText: {
         fontSize: 14,
-        color: '#C8B98A',
+        color: '#5B3A00',
         lineHeight: 22,
         flex: 1,
     },
 
-    // Tirth chips
     tirthIntro: {
         fontSize: 12,
-        color: '#4A5568',
+        color: '#7A7A7A',
         marginBottom: 12,
         fontStyle: 'italic',
     },
+
     tirthChip: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#0D0D20',
+        backgroundColor: '#FFF8E7',
         borderRadius: 12,
         paddingVertical: 13,
         paddingHorizontal: 14,
         marginBottom: 8,
         borderWidth: 1,
-        borderColor: '#1E1E3F',
+        borderColor: '#F1E4C7',
     },
+
     tirthChipText: {
         fontSize: 14,
-        color: '#8B9ABB',
+        color: '#5B3A00',
         fontWeight: '600',
         flex: 1,
     },
+
     tirthChipArrow: {
         color: '#C8960C',
         fontSize: 16,
         fontWeight: '700',
     },
 
-    // Nirvana highlight
     nirvanaHighlight: {
-        backgroundColor: '#C8960C12',
+        backgroundColor: '#FFF8E7',
         borderRadius: 12,
         padding: 14,
         borderWidth: 1,
-        borderColor: '#C8960C30',
+        borderColor: '#F1D68A',
     },
+
     nirvanaHighlightPlace: {
         fontSize: 16,
         fontWeight: '800',
         color: '#C8960C',
         marginBottom: 6,
     },
+
     nirvanaHighlightDesc: {
         fontSize: 13,
-        color: '#8B7355',
+        color: '#9C7C38',
         lineHeight: 20,
     },
 
-    // Footer
     footer: {
         textAlign: 'center',
-        color: '#2A2A4A',
+        color: '#A68A54',
         fontSize: 14,
         paddingVertical: 28,
         letterSpacing: 2,
