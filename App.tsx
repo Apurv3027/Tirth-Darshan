@@ -5,9 +5,7 @@ import { AppNavigator } from './src/navigation';
 export default function App() {
   return (
     <SafeAreaProvider>
-        <SafeAreaProvider>
-          <AppNavigator />
-        </SafeAreaProvider>
+      <AppNavigator />
     </SafeAreaProvider>
   );
 }
