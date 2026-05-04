@@ -3,6 +3,7 @@ import { requireNativeComponent, ViewProps } from 'react-native';
 
 interface ReelsNativeVideoProps extends ViewProps {
     src?: string;
+    source?: any;
     paused?: boolean;
 }
 
