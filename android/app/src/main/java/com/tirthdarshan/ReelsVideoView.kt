@@ -38,7 +38,20 @@ class ReelsVideoView(context: Context) : FrameLayout(context) {
     fun setSrc(uriString: String?) {
         this.videoUri = uriString
         if (uriString != null) {
-            val mediaItem = MediaItem.fromUri(Uri.parse(uriString))
+            var parsedUri = Uri.parse(uriString)
+            
+            if (parsedUri.scheme == null) {
+                val resourceName = uriString.substringBeforeLast(".")
+                var resId = context.resources.getIdentifier(resourceName, "raw", context.packageName)
+                if (resId == 0) {
+                    resId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+                }
+                if (resId != 0) {
+                    parsedUri = Uri.parse("android.resource://${context.packageName}/$resId")
+                }
+            }
+            
+            val mediaItem = MediaItem.fromUri(parsedUri)
             player?.setMediaItem(mediaItem)
             player?.prepare()
             if (!isPaused) {

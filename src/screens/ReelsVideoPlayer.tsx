@@ -702,6 +702,7 @@ const ReelItem = ({
     }, []);
 
     const resolvedSource = item.uri ? item.uri : Image.resolveAssetSource(item.localSource)?.uri;
+    const rawSource = item.uri ? { uri: item.uri } : item.localSource;
 
     return (
         <View style={[styles.reelContainer, { height: containerHeight }]}>
@@ -709,6 +710,7 @@ const ReelItem = ({
             {isActive && (
                 <ReelsNativeVideo
                     src={resolvedSource}
+                    source={rawSource}
                     style={{
                         position: 'absolute',
                         top: 0,
