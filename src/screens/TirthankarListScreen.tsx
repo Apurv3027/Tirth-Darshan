@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
     View,
     Text,
@@ -8,10 +8,12 @@ import {
     StyleSheet,
     StatusBar,
     Platform,
+    ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TIRTHANKARS, Tirthankar } from '../data/tirthankars';
+import { Tirthankar } from '../data/tirthankars';
+import { dbService } from '../services/dbService';
 import { RootStackParams } from '../navigation';
 
 type Nav = NativeStackNavigationProp<RootStackParams>;
@@ -80,9 +82,26 @@ export const TirthankarListScreen = () => {
     const nav = useNavigation<Nav>();
     const [query, setQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState('All');
+    const [tirthankars, setTirthankars] = useState<Tirthankar[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let isMounted = true;
+        const loadTirthankars = async () => {
+            const data = await dbService.getTirthankars();
+            if (isMounted) {
+                setTirthankars(data);
+                setLoading(false);
+            }
+        };
+        loadTirthankars();
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const filtered = useMemo(() => {
-        return TIRTHANKARS.filter(t => {
+        return tirthankars.filter(t => {
             const matchQuery =
                 query === '' ||
                 t.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -99,11 +118,22 @@ export const TirthankarListScreen = () => {
 
             return matchQuery && matchFilter;
         });
-    }, [query, activeFilter]);
+    }, [query, activeFilter, tirthankars]);
+
+    if (loading) {
+        return (
+            <View style={[s.container, s.loadingContainer]}>
+                <StatusBar barStyle="dark-content" backgroundColor="#FDFBF6" />
+                <ActivityIndicator size="large" color="#C8960C" />
+                <Text style={s.loadingText}>Connecting to divine portal...</Text>
+                <Text style={s.loadingSubtext}>Loading Tirthankar data</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={s.container}>
-            <StatusBar barStyle="light-content" backgroundColor="#0A0A18" />
+            <StatusBar barStyle="dark-content" backgroundColor="#FDFBF6" />
 
             {/* Header */}
             <View style={s.header}>
@@ -176,6 +206,23 @@ export const TirthankarListScreen = () => {
 };
 
 const s = StyleSheet.create({
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FDFBF6',
+    },
+    loadingText: {
+        fontSize: 16,
+        color: '#8B5E00',
+        fontWeight: '700',
+        marginTop: 14,
+    },
+    loadingSubtext: {
+        fontSize: 13,
+        color: '#8A8A8A',
+        marginTop: 4,
+    },
     container: {
         flex: 1,
         backgroundColor: '#FDFBF6',

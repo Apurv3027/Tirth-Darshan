@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     ScrollView,
     View,
@@ -10,6 +10,7 @@ import {
     FlatList,
     Platform,
     GestureResponderEvent,
+    ActivityIndicator,
 } from 'react-native';
 import Video from 'react-native-video';
 import {
@@ -17,7 +18,8 @@ import {
     useRoute,
     RouteProp,
 } from '@react-navigation/native';
-import { TIRTHS } from '../data/tirths';
+import { Tirth } from '../data/tirths';
+import { dbService } from '../services/dbService';
 import ScreenWrapper from '../components/ScreenWrapper';
 
 const { width } = Dimensions.get('window');
@@ -73,21 +75,43 @@ const InfoCard = ({ title, value }: InfoCardProps) => (
 export const TirthDetailScreen = () => {
     const nav = useNavigation();
     const { params } = useRoute<TirthDetailRouteProp>();
-
-    const tirth = TIRTHS.find(
-        t =>
-            t.id === params.id ||
-            t.name.toLowerCase() === params.id.toLowerCase()
-    );
-
+    const [tirth, setTirth] = useState<Tirth | null>(null);
+    const [loading, setLoading] = useState(true);
     const [tab, setTab] = useState<TabKey>('info');
     const [vrActive, setVrActive] = useState(false);
+
+    useEffect(() => {
+        let isMounted = true;
+        setLoading(true);
+        dbService.getTirthById(params.id).then(res => {
+            if (isMounted) {
+                setTirth(res);
+                setLoading(false);
+            }
+        });
+        return () => {
+            isMounted = false;
+        };
+    }, [params.id]);
+
+    if (loading) {
+        return (
+            <ScreenWrapper backgroundColor="#FDFBF6">
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color="#C8960C" />
+                    <Text style={{ fontSize: 15, color: '#8B5E00', fontWeight: '700', marginTop: 14 }}>
+                        Entering holy sanctuary...
+                    </Text>
+                </View>
+            </ScreenWrapper>
+        );
+    }
 
     if (!tirth) {
         return (
             <ScreenWrapper backgroundColor="#FDFBF6">
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text>Tirth not found</Text>
+                    <Text style={{ color: '#7A7A7A', fontSize: 16 }}>Tirth not found</Text>
                 </View>
             </ScreenWrapper>
         );
