@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -7,10 +7,12 @@ import {
     StyleSheet,
     Platform,
     Share,
+    ActivityIndicator,
 } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TIRTHANKARS } from '../data/tirthankars';
+import { Tirthankar } from '../data/tirthankars';
+import { dbService } from '../services/dbService';
 import { RootStackParams } from '../navigation';
 import ScreenWrapper from '../components/ScreenWrapper';
 
@@ -88,13 +90,43 @@ export const TirthankarProfileScreen = () => {
     const { params } = useRoute<RouteT>();
     const nav = useNavigation<Nav>();
     const [activeTab, setActiveTab] = useState<Tab>('Profile');
+    const [t, setT] = useState<Tirthankar | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    const t = TIRTHANKARS.find(x => x.id === params.id);
+    useEffect(() => {
+        let isMounted = true;
+        setLoading(true);
+        dbService.getTirthankarById(params.id).then(res => {
+            if (isMounted) {
+                setT(res);
+                setLoading(false);
+            }
+        });
+        return () => {
+            isMounted = false;
+        };
+    }, [params.id]);
+
+    if (loading) {
+        return (
+            <ScreenWrapper backgroundColor="#FDFBF6">
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color="#C8960C" />
+                    <Text style={{ fontSize: 15, color: '#8B5E00', fontWeight: '700', marginTop: 14 }}>
+                        Unveiling sacred profile...
+                    </Text>
+                </View>
+            </ScreenWrapper>
+        );
+    }
+
     if (!t) {
         return (
-            <View style={s.errorContainer}>
-                <Text style={s.errorText}>Tirthankar not found</Text>
-            </View>
+            <ScreenWrapper backgroundColor="#FDFBF6">
+                <View style={s.errorContainer}>
+                    <Text style={s.errorText}>Tirthankar not found</Text>
+                </View>
+            </ScreenWrapper>
         );
     }
 

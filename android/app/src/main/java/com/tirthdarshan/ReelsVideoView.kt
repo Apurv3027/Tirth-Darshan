@@ -78,6 +78,20 @@ class ReelsVideoView(context: Context) : FrameLayout(context) {
         playerView?.player = null
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (player == null) {
+            player = ExoPlayer.Builder(context).build().apply {
+                repeatMode = Player.REPEAT_MODE_ALL
+                playWhenReady = !isPaused
+            }
+            playerView?.player = player
+            videoUri?.let {
+                setSrc(it)
+            }
+        }
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         release()
