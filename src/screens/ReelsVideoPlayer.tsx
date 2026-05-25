@@ -19,10 +19,16 @@ import {
     ScrollView,
     Pressable,
     PanResponder,
+    Share,
+    AppState,
 } from 'react-native';
 
 import Video, { VideoRef } from 'react-native-video';
+import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ReelsNativeVideo } from '../components/ReelsNativeVideo';
+import { dbService } from '../services/dbService';
+import { ReelData } from '../data/reels';
 
 // ─── Asset Icons ──────────────────────────────────────────────────────────────
 const ICONS = {
@@ -77,93 +83,7 @@ const VIEWABILITY_CONFIG = {
 
 // ─── Local video assets (bundled with app — always works on real devices) ─────
 // When connecting to Firebase, replace `source` with `{ uri: firebaseVideoURL }`
-const LOCAL_VIDEOS = {
-    reel1: require('../assets/videos/reel1.mp4'),
-    reel2: require('../assets/videos/reel2.mp4'),
-    reel3: require('../assets/videos/reel3.mp4'),
-};
-
-// ─── Reel Data ───────────────────────────────────────────────────────────────
-// Production: Fetch this from Firebase Firestore and use `uri` field for remote videos
-export interface ReelData {
-    id: string;
-    // For local: use `localSource` key. For Firebase: use `uri` key.
-    localSource?: any;
-    uri?: string;
-    user: string;
-    avatar: string;
-    description: string;
-    likes: string;
-    comments: string;
-    shares: string;
-    music: string;
-}
-
-const REELS_DATA: ReelData[] = [
-    {
-        id: '1',
-        localSource: LOCAL_VIDEOS.reel1,
-        user: 'Shri Palitana Tirth',
-        avatar: 'https://i.pravatar.cc/100?img=1',
-        description: 'पालीताना तीर्थ के दर्शन 🙏 श्री शत्रुंजय गिरि #jain #tirth #palitana',
-        likes: '12.4K',
-        comments: '856',
-        shares: '2.1K',
-        music: 'Navkar Mantra - Sacred Chants',
-    },
-    {
-        id: '2',
-        localSource: LOCAL_VIDEOS.reel2,
-        user: 'Ranakpur Jain Temple',
-        avatar: 'https://i.pravatar.cc/100?img=2',
-        description: 'रणकपुर जैन मंदिर की अद्भुत शिल्पकला ✨ #ranakpur #jaintemple',
-        likes: '8.9K',
-        comments: '432',
-        shares: '1.5K',
-        music: 'Bhakti Sangeet - Devotional',
-    },
-    {
-        id: '3',
-        localSource: LOCAL_VIDEOS.reel3,
-        user: 'Dilwara Temples',
-        avatar: 'https://i.pravatar.cc/100?img=3',
-        description: 'दिलवाड़ा मंदिर, माउंट आबू 🕉️ #dilwara #mountabu #jain',
-        likes: '21.7K',
-        comments: '1.2K',
-        shares: '4.8K',
-        music: 'Stavan - Temple Music',
-    },
-    {
-        id: '4',
-        localSource: LOCAL_VIDEOS.reel1,
-        user: 'Girnar Tirth',
-        avatar: 'https://i.pravatar.cc/100?img=4',
-        description: 'गिरनार तीर्थ यात्रा 🏔️ नेमिनाथ भगवान #girnar #junagadh',
-        likes: '34.1K',
-        comments: '2.9K',
-        shares: '7.2K',
-        music: 'Jai Jinendra - Devotional',
-    },
-    {
-        id: '5',
-        localSource: LOCAL_VIDEOS.reel2,
-        user: 'Shatrunjay Hills',
-        avatar: 'https://i.pravatar.cc/100?img=5',
-        description: 'सूर्योदय शत्रुंजय पर्वत से 🌅 अद्भुत दृश्य #sunrise #tirth',
-        likes: '45.3K',
-        comments: '3.4K',
-        shares: '9.1K',
-        music: 'Morning Prayers - Sacred',
-    },
-];
-
-// ─── Helper: Get video source (supports both local and Firebase) ─────────────
-const getVideoSource = (item: ReelData) => {
-    if (item.uri) {
-        return { uri: item.uri };
-    }
-    return item.localSource;
-};
+// ─── Reels data is loaded dynamically from Supabase / Local Fallback ─────────
 
 // ─── Heart Animation ─────────────────────────────────────────────────────────
 const HeartBurst = memo(({ visible }: { visible: boolean }) => {
@@ -274,26 +194,24 @@ const ActionButton = memo(
     },
 );
 
-// ─── Dummy Comment Data ───────────────────────────────────────────────────────
-const DUMMY_COMMENTS = [
-    { id: '1', user: 'jay_jain_2024', avatar: 'https://i.pravatar.cc/100?img=10', text: 'जय जिनेंद्र 🙏 बहुत सुंदर दर्शन!', time: '2h', likes: 142 },
-    { id: '2', user: 'palitana_yatra', avatar: 'https://i.pravatar.cc/100?img=11', text: 'इस तीर्थ की यात्रा करना जीवन का सबसे अच्छा अनुभव था 🕉️', time: '3h', likes: 89 },
-    { id: '3', user: 'devotee_amisha', avatar: 'https://i.pravatar.cc/100?img=12', text: 'Jai Jinendra! The marble carvings are breathtaking 😍', time: '5h', likes: 213 },
-    { id: '4', user: 'ranakpur_fan', avatar: 'https://i.pravatar.cc/100?img=13', text: 'कब जाना है यहाँ 🤩 Planning my trip soon!', time: '6h', likes: 55 },
-    { id: '5', user: 'tirth_darshan_official', avatar: 'https://i.pravatar.cc/100?img=14', text: 'Thank you for sharing these divine moments with us 🙏✨', time: '8h', likes: 304 },
-    { id: '6', user: 'jain_heritage', avatar: 'https://i.pravatar.cc/100?img=15', text: 'Incredible architecture! UNESCO should recognize this 🏛️', time: '10h', likes: 178 },
-    { id: '7', user: 'moksha_path', avatar: 'https://i.pravatar.cc/100?img=16', text: 'जय शत्रुंजय महातीर्थ 🙏🏼 आदिनाथ भगवान की जय!', time: '12h', likes: 421 },
-];
+
 
 // ─── Comments Bottom Sheet ─────────────────────────────────────────────────────
 const SHEET_HEIGHT = SCREEN_HEIGHT * 0.50;
 
-const CommentsBottomSheet = memo(({ visible, onClose, commentCount }: {
-    visible: boolean; onClose: () => void; commentCount: string;
-}) => {
+interface CommentsBottomSheetProps {
+    visible: boolean;
+    onClose: () => void;
+    commentCount: string;
+    reelId: string;
+    onCommentAdded: () => void;
+}
+
+const CommentsBottomSheet = memo(({ visible, onClose, commentCount, reelId, onCommentAdded }: CommentsBottomSheetProps) => {
     const slideAnim = useRef(new Animated.Value(SHEET_HEIGHT)).current;
     const backdropOpacity = useRef(new Animated.Value(0)).current;
     const [commentText, setCommentText] = useState('');
+    const [comments, setComments] = useState<any[]>([]);
     const [mounted, setMounted] = useState(false);
 
     const animateOpen = useCallback(() => {
@@ -310,12 +228,64 @@ const CommentsBottomSheet = memo(({ visible, onClose, commentCount }: {
         ]).start(() => { setMounted(false); cb?.(); });
     }, [backdropOpacity, slideAnim]);
 
+    // Load actual comments
     useEffect(() => {
-        if (visible) { setMounted(true); animateOpen(); }
-        else { animateClose(); }
-    }, [visible, animateOpen, animateClose]);
+        if (visible) {
+            setMounted(true);
+            animateOpen();
+            let isMounted = true;
+            dbService.getReelComments(reelId).then(dbData => {
+                if (isMounted) {
+                    const mappedDb = dbData.map(c => ({
+                        id: c.id,
+                        user: c.user_name,
+                        avatar: c.avatar_url,
+                        text: c.comment_text,
+                        time: new Date(c.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        likes: 0
+                    }));
+                    setComments(mappedDb);
+                }
+            }).catch(err => {
+                console.error('[CommentsBottomSheet] Failed to load comments:', err);
+                if (isMounted) {
+                    setComments([]);
+                }
+            });
+            return () => { isMounted = false; };
+        } else {
+            animateClose();
+        }
+    }, [visible, reelId, animateOpen, animateClose]);
 
-    // ── Drag-to-close pan responder (attached to the handle zone) ──
+    const handlePostComment = async () => {
+        if (!commentText.trim()) return;
+        const text = commentText.trim();
+        setCommentText(''); // Clear instantly for smooth UI
+        try {
+            const res = await dbService.addReelComment(
+                reelId,
+                'You',
+                'https://i.pravatar.cc/100?img=20',
+                text
+            );
+
+            const newComment = {
+                id: res.id || Math.random().toString(),
+                user: res.user_name || 'You',
+                avatar: res.avatar_url || 'https://i.pravatar.cc/100?img=20',
+                text: res.comment_text || text,
+                time: 'Just now',
+                likes: 0
+            };
+
+            setComments(prev => [newComment, ...prev]);
+            onCommentAdded();
+        } catch (err) {
+            console.error('[CommentsBottomSheet] Error posting comment:', err);
+        }
+    };
+
     const panResponder = useRef(
         PanResponder.create({
             onStartShouldSetPanResponder: () => true,
@@ -324,11 +294,9 @@ const CommentsBottomSheet = memo(({ visible, onClose, commentCount }: {
                 if (g.dy > 0) slideAnim.setValue(g.dy);
             },
             onPanResponderRelease: (_, g) => {
-                // Close if dragged >80px or flicked fast
                 if (g.dy > 80 || g.vy > 0.8) {
                     animateClose(onClose);
                 } else {
-                    // Snap back
                     Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true, bounciness: 6 }).start();
                 }
             },
@@ -344,7 +312,6 @@ const CommentsBottomSheet = memo(({ visible, onClose, commentCount }: {
                     <Pressable style={StyleSheet.absoluteFill} onPress={() => animateClose(onClose)} />
                 </Animated.View>
                 <Animated.View style={[bsStyles.sheet, { transform: [{ translateY: slideAnim }] }]}>
-                    {/* Draggable handle zone */}
                     <View {...panResponder.panHandlers} style={bsStyles.dragZone}>
                         <View style={bsStyles.handle} />
                     </View>
@@ -352,24 +319,38 @@ const CommentsBottomSheet = memo(({ visible, onClose, commentCount }: {
                         <Text style={bsStyles.sheetTitle}>Comments</Text>
                         <Text style={bsStyles.commentCount}>{commentCount}</Text>
                     </View>
-                    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-                        {DUMMY_COMMENTS.map(c => (
-                            <View key={c.id} style={bsStyles.commentRow}>
-                                <Image source={{ uri: c.avatar }} style={bsStyles.commentAvatar} />
-                                <View style={bsStyles.commentBody}>
-                                    <Text style={bsStyles.commentUser}>{c.user}</Text>
-                                    <Text style={bsStyles.commentText}>{c.text}</Text>
-                                    <View style={bsStyles.commentMeta}>
-                                        <Text style={bsStyles.commentTime}>{c.time}</Text>
-                                        <Text style={bsStyles.commentLikeText}>{c.likes} likes</Text>
-                                        <TouchableOpacity><Text style={bsStyles.commentReply}>Reply</Text></TouchableOpacity>
-                                    </View>
+                    <ScrollView 
+                        style={{ flex: 1 }} 
+                        contentContainerStyle={comments.length === 0 ? { flexGrow: 1, justifyContent: 'center', alignItems: 'center' } : undefined}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {comments.length === 0 ? (
+                            <View style={bsStyles.emptyContainer}>
+                                <View style={bsStyles.emptyIconCircle}>
+                                    <Text style={bsStyles.emptyEmoji}>💬</Text>
                                 </View>
-                                <TouchableOpacity style={bsStyles.commentHeart}>
-                                    <Text style={{ fontSize: 14, color: '#888' }}>♡</Text>
-                                </TouchableOpacity>
+                                <Text style={bsStyles.emptyText}>No comments yet</Text>
+                                <Text style={bsStyles.emptySubtext}>Be the first to share your thoughts!</Text>
                             </View>
-                        ))}
+                        ) : (
+                            comments.map(c => (
+                                <View key={c.id} style={bsStyles.commentRow}>
+                                    <Image source={{ uri: c.avatar }} style={bsStyles.commentAvatar} />
+                                    <View style={bsStyles.commentBody}>
+                                        <Text style={bsStyles.commentUser}>{c.user}</Text>
+                                        <Text style={bsStyles.commentText}>{c.text}</Text>
+                                        <View style={bsStyles.commentMeta}>
+                                            <Text style={bsStyles.commentTime}>{c.time}</Text>
+                                            <Text style={bsStyles.commentLikeText}>{c.likes} likes</Text>
+                                            <TouchableOpacity><Text style={bsStyles.commentReply}>Reply</Text></TouchableOpacity>
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity style={bsStyles.commentHeart}>
+                                        <Text style={{ fontSize: 14, color: '#888' }}>♡</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ))
+                        )}
                         <View style={{ height: 24 }} />
                     </ScrollView>
                     <View style={bsStyles.inputBar}>
@@ -383,7 +364,7 @@ const CommentsBottomSheet = memo(({ visible, onClose, commentCount }: {
                             multiline
                         />
                         {commentText.length > 0 && (
-                            <TouchableOpacity onPress={() => setCommentText('')}>
+                            <TouchableOpacity onPress={handlePostComment}>
                                 <Text style={bsStyles.postBtn}>Post</Text>
                             </TouchableOpacity>
                         )}
@@ -417,7 +398,13 @@ const SHARE_OPTIONS = [
     { id: '7', label: 'Save', icon: SHARE_ICONS.save, },
 ];
 
-const ShareBottomSheet = memo(({ visible, onClose }: { visible: boolean; onClose: () => void }) => {
+interface ShareBottomSheetProps {
+    visible: boolean;
+    onClose: () => void;
+    onShareOptionPress: (label: string) => void;
+}
+
+const ShareBottomSheet = memo(({ visible, onClose, onShareOptionPress }: ShareBottomSheetProps) => {
     const slideAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
     const backdropOpacity = useRef(new Animated.Value(0)).current;
     const [mounted, setMounted] = useState(false);
@@ -449,10 +436,9 @@ const ShareBottomSheet = memo(({ visible, onClose }: { visible: boolean; onClose
                     <View style={bsStyles.handle} />
                     <Text style={bsStyles.shareTitle}>Share to</Text>
 
-                    {/* 4-per-row icon grid */}
                     <View style={bsStyles.shareGrid}>
                         {SHARE_OPTIONS.map(opt => (
-                            <TouchableOpacity key={opt.id} style={bsStyles.shareOption} onPress={onClose} activeOpacity={0.75}>
+                            <TouchableOpacity key={opt.id} style={bsStyles.shareOption} onPress={() => onShareOptionPress(opt.label)} activeOpacity={0.75}>
                                 <View style={[bsStyles.shareIconCircle]}>
                                     <Image source={opt.icon} style={bsStyles.shareIconImg} resizeMode="contain" />
                                 </View>
@@ -461,7 +447,6 @@ const ShareBottomSheet = memo(({ visible, onClose }: { visible: boolean; onClose
                         ))}
                     </View>
 
-                    {/* Cancel pill */}
                     <TouchableOpacity style={bsStyles.cancelBtn} onPress={onClose} activeOpacity={0.8}>
                         <Text style={bsStyles.cancelText}>Cancel</Text>
                     </TouchableOpacity>
@@ -571,24 +556,83 @@ const bsStyles = StyleSheet.create({
         borderWidth: StyleSheet.hairlineWidth, borderColor: '#2c2c2e',
     },
     cancelText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+    emptyContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 40,
+        paddingBottom: 40,
+        flex: 1,
+    },
+    emptyIconCircle: {
+        width: 72,
+        height: 72,
+        borderRadius: 36,
+        backgroundColor: '#1c1c1e',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 16,
+        borderWidth: 1,
+        borderColor: '#2c2c2e',
+    },
+    emptyEmoji: {
+        fontSize: 32,
+    },
+    emptyText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 6,
+    },
+    emptySubtext: {
+        color: '#666',
+        fontSize: 13,
+        textAlign: 'center',
+        lineHeight: 18,
+    },
 });
 
-// ─── Single Reel Item ────────────────────────────────────────────────────────
+// ─── Helpers: Count Parsing & Formatting ────────────────────────────────────
+const formatCount = (count: number): string => {
+    if (count >= 1000000) return (count / 1000000).toFixed(1) + 'M';
+    if (count >= 1000) return (count / 1000).toFixed(1) + 'K';
+    return count.toString();
+};
+
+const parseCount = (str: string): number => {
+    if (!str) return 0;
+    const cleanStr = str.toUpperCase().trim();
+    if (cleanStr.endsWith('M')) {
+        return parseFloat(cleanStr.slice(0, -1)) * 1000000;
+    }
+    if (cleanStr.endsWith('K')) {
+        return parseFloat(cleanStr.slice(0, -1)) * 1000;
+    }
+    const val = parseInt(cleanStr, 10);
+    return isNaN(val) ? 0 : val;
+};
+
 const ReelItem = ({
     item,
-    isActive,
+    index,
+    activeIndex,
+    isScreenActive,
     containerHeight,
 }: {
     item: ReelData;
-    isActive: boolean;
+    index: number;
+    activeIndex: number;
+    isScreenActive: boolean;
     containerHeight: number;
 }) => {
+    const isActive = index === activeIndex;
+    const shouldMount = Math.abs(index - activeIndex) <= 1;
+
     const [paused, setPaused] = useState(!isActive);
+    const [userPaused, setUserPaused] = useState(false);
     const [showComments, setShowComments] = useState(false);
     const [showShare, setShowShare] = useState(false);
     const [liked, setLiked] = useState(false);
     const [showHeart, setShowHeart] = useState(false);
-    // isLoading kept false: our custom native player handles its own loading state
     const [isLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -598,22 +642,51 @@ const ReelItem = ({
     const progressAnimRef = useRef<Animated.CompositeAnimation | null>(null);
     const videoDuration = useRef(15000);
 
-    // Auto-play/pause when visibility changes
+    // Dynamic Interaction States
+    const [likesCount, setLikesCount] = useState(item.likes);
+    const [commentsCount, setCommentsCount] = useState(item.comments);
+    const [sharesCount, setSharesCount] = useState(item.shares);
+
+    // Load local liked state cache on mount
     useEffect(() => {
-        if (isActive) {
+        let isMounted = true;
+        const loadLikedState = async () => {
+            try {
+                const likedKeys = await AsyncStorage.getItem('@liked_reels');
+                if (likedKeys && isMounted) {
+                    const parsed = JSON.parse(likedKeys);
+                    if (parsed.includes(item.id)) {
+                        setLiked(true);
+                    }
+                }
+            } catch (err) {
+                console.error('[ReelItem] Error loading liked state from storage:', err);
+            }
+        };
+        loadLikedState();
+        return () => { isMounted = false; };
+    }, [item.id]);
+
+    // Auto-play/pause when visibility or focus changes
+    useEffect(() => {
+        if (isActive && isScreenActive) {
             setPaused(false);
+            setUserPaused(false);
             setHasError(false);
         } else {
             setPaused(true);
+            if (!isScreenActive) {
+                setUserPaused(false);
+            }
             progressAnim.setValue(0);
             progressAnimRef.current?.stop();
             if (videoRef.current) {
                 videoRef.current.seek(0);
             }
         }
-    }, [isActive, progressAnim]);
+    }, [isActive, isScreenActive, progressAnim]);
 
-    // Handle video load success (kept for future use when native video emits callbacks)
+    // Handle video load success
     const handleLoad = useCallback(
         (data: any) => {
             console.log('✅ Video loaded:', item.id, 'duration:', data.duration);
@@ -658,35 +731,90 @@ const ReelItem = ({
         }
     }, [paused, isLoading, isActive, hasError]);
 
-    // Single / double-tap handler
-    // - Single tap  → play / pause the video
-    // - Double tap  → like the reel + heart burst animation
-    const singleTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const toggleLike = useCallback(() => {
+        setLiked(prev => {
+            const next = !prev;
+            const currentVal = parseCount(likesCount);
+            const newVal = next ? currentVal + 1 : Math.max(0, currentVal - 1);
+            const formatted = formatCount(newVal);
+            setLikesCount(formatted);
+
+            if (next) {
+                setShowHeart(true);
+                setTimeout(() => setShowHeart(false), 1200);
+            }
+
+            // Sync with local AsyncStorage device cache
+            AsyncStorage.getItem('@liked_reels').then(likedKeys => {
+                let keys = likedKeys ? JSON.parse(likedKeys) : [];
+                if (next) {
+                    if (!keys.includes(item.id)) keys.push(item.id);
+                } else {
+                    keys = keys.filter((k: string) => k !== item.id);
+                }
+                return AsyncStorage.setItem('@liked_reels', JSON.stringify(keys));
+            }).catch(err => {
+                console.error('[ReelItem] AsyncStorage toggle error:', err);
+            });
+
+            dbService.updateReelLikes(item.id, formatted).catch(err => {
+                console.error('[ReelItem] Failed to update likes in Supabase:', err);
+            });
+
+            return next;
+        });
+    }, [likesCount, item.id]);
 
     const handlePress = useCallback(() => {
         const now = Date.now();
-        const DOUBLE_TAP_WINDOW = 350; // ms between taps to count as double
+        const DOUBLE_TAP_WINDOW = 350;
 
         if (now - lastTapRef.current < DOUBLE_TAP_WINDOW) {
-            // ── Double-tap detected ──────────────────────────
-            // Cancel the pending single-tap action
             if (singleTapTimer.current) {
                 clearTimeout(singleTapTimer.current);
                 singleTapTimer.current = null;
             }
-            setLiked(true);
-            setShowHeart(true);
-            setTimeout(() => setShowHeart(false), 1200);
+            if (!liked) {
+                toggleLike();
+            } else {
+                setShowHeart(true);
+                setTimeout(() => setShowHeart(false), 1200);
+            }
         } else {
-            // ── First tap: wait to see if a second tap follows ─
             singleTapTimer.current = setTimeout(() => {
                 singleTapTimer.current = null;
-                setPaused(p => !p);
+                setPaused(p => {
+                    const next = !p;
+                    setUserPaused(next);
+                    return next;
+                });
             }, DOUBLE_TAP_WINDOW);
         }
 
         lastTapRef.current = now;
-    }, []);
+    }, [liked, toggleLike]);
+
+    const handleShareOption = async (optionLabel: string) => {
+        setShowShare(false);
+        try {
+            await Share.share({
+                message: `Check out this amazing reel from TirthDarshan: "${item.description}"\nWatch here: ${resolvedSource}`,
+            });
+
+            const currentVal = parseCount(sharesCount);
+            const newVal = currentVal + 1;
+            const formatted = formatCount(newVal);
+            setSharesCount(formatted);
+
+            dbService.updateReelSharesCount(item.id, formatted).catch(err => {
+                console.error('[ReelItem] Failed to update shares count in Supabase:', err);
+            });
+        } catch (error) {
+            console.error('Error sharing reel:', error);
+        }
+    };
+
+    const singleTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const progressWidth = progressAnim.interpolate({
         inputRange: [0, 1],
@@ -707,7 +835,7 @@ const ReelItem = ({
     return (
         <View style={[styles.reelContainer, { height: containerHeight }]}>
             {/* ── Video Player (at bottom of z-stack) ── */}
-            {isActive && (
+            {shouldMount && (
                 <ReelsNativeVideo
                     src={resolvedSource}
                     source={rawSource}
@@ -721,8 +849,6 @@ const ReelItem = ({
                     paused={paused}
                 />
             )}
-
-            {/* Loading spinner removed: native player handles its own loading */}
 
             {/* ── Error state ── */}
             {hasError && isActive && (
@@ -739,7 +865,7 @@ const ReelItem = ({
             )}
 
             {/* ── Pause indicator ── */}
-            {paused && isActive && !isLoading && !hasError && (
+            {userPaused && isActive && !isLoading && !hasError && (
                 <View style={styles.centerOverlay} pointerEvents="none">
                     <View style={styles.pauseIconBox}>
                         <Text style={styles.pauseIconText}>▶</Text>
@@ -748,7 +874,6 @@ const ReelItem = ({
             )}
 
             {/* ── Full-screen transparent tap overlay (above native video, below UI) ── */}
-            {/* Must be here so it receives taps the native video would otherwise swallow */}
             <TouchableWithoutFeedback onPress={handlePress}>
                 <View style={StyleSheet.absoluteFill} />
             </TouchableWithoutFeedback>
@@ -758,7 +883,7 @@ const ReelItem = ({
                 <HeartBurst visible={showHeart} />
             </View>
 
-            {/* ── Header: title only, no camera icon ── */}
+            {/* ── Header ── */}
             <View style={styles.header} pointerEvents="none">
                 <Text style={styles.headerTitle}>Reels</Text>
             </View>
@@ -777,21 +902,21 @@ const ReelItem = ({
                 {/* Like */}
                 <ActionButton
                     iconNode={<HeartIcon filled={liked} size={30} />}
-                    label={item.likes}
-                    onPress={() => setLiked(l => !l)}
+                    label={likesCount}
+                    onPress={toggleLike}
                 />
 
                 {/* Comment */}
                 <ActionButton
                     iconNode={<CommentIcon size={28} />}
-                    label={item.comments}
+                    label={commentsCount}
                     onPress={() => setShowComments(true)}
                 />
 
                 {/* Share */}
                 <ActionButton
                     iconNode={<ShareIcon size={28} />}
-                    label={item.shares}
+                    label={sharesCount}
                     onPress={() => setShowShare(true)}
                 />
 
@@ -821,23 +946,81 @@ const ReelItem = ({
             <CommentsBottomSheet
                 visible={showComments}
                 onClose={() => setShowComments(false)}
-                commentCount={item.comments}
+                commentCount={commentsCount}
+                reelId={item.id}
+                onCommentAdded={() => {
+                    const currentVal = parseCount(commentsCount);
+                    const newVal = currentVal + 1;
+                    const formatted = formatCount(newVal);
+                    setCommentsCount(formatted);
+                    dbService.updateReelCommentsCount(item.id, formatted).catch(err => {
+                        console.error('[ReelItem] Failed to update comment count in Supabase:', err);
+                    });
+                }}
             />
 
             {/* ── Share Bottom Sheet ── */}
             <ShareBottomSheet
                 visible={showShare}
                 onClose={() => setShowShare(false)}
+                onShareOptionPress={handleShareOption}
             />
         </View>
     );
 };
 
+// ─── Global in-memory cache for SWR instant navigation load ──────────────────
+let CACHED_REELS: ReelData[] = [];
+
 // ─── Main Reels Player ───────────────────────────────────────────────────────
 export default function ReelsPlayer() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [containerHeight, setContainerHeight] = useState(SCREEN_HEIGHT);
+    const [reels, setReels] = useState<ReelData[]>(CACHED_REELS);
+    const [loading, setLoading] = useState(CACHED_REELS.length === 0);
     const flatListRef = useRef<FlatList>(null);
+
+    // Screen navigation focus state
+    const isFocused = useIsFocused();
+
+    // App state listener (foreground/background)
+    const [appState, setAppState] = useState(AppState.currentState);
+
+    useEffect(() => {
+        const subscription = AppState.addEventListener('change', nextAppState => {
+            setAppState(nextAppState);
+        });
+        return () => {
+            subscription.remove();
+        };
+    }, []);
+
+    const isAppActive = appState === 'active';
+    const isScreenActive = isFocused && isAppActive;
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchReels = async () => {
+            try {
+                const data = await dbService.getReels();
+                if (isMounted) {
+                    CACHED_REELS = data;
+                    setReels(data);
+                }
+            } catch (err) {
+                console.error('[ReelsPlayer] Error loading reels:', err);
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchReels();
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const onViewableItemsChanged = useCallback(
         ({ viewableItems }: { viewableItems: any[] }) => {
@@ -860,11 +1043,13 @@ export default function ReelsPlayer() {
         ({ item, index }: { item: ReelData; index: number }) => (
             <ReelItem
                 item={item}
-                isActive={index === activeIndex}
+                index={index}
+                activeIndex={activeIndex}
+                isScreenActive={isScreenActive}
                 containerHeight={containerHeight}
             />
         ),
-        [activeIndex, containerHeight],
+        [activeIndex, isScreenActive, containerHeight],
     );
 
     const keyExtractor = useCallback((item: ReelData) => item.id, []);
@@ -881,6 +1066,20 @@ export default function ReelsPlayer() {
     const videoRef = useRef(null);
     const [paused, setPaused] = useState(false);
 
+    if (loading) {
+        return (
+            <View style={[styles.root, { justifyContent: 'center', alignItems: 'center' }]}>
+                <StatusBar
+                    hidden={false}
+                    translucent
+                    backgroundColor="transparent"
+                    barStyle="light-content"
+                />
+                <ActivityIndicator size="large" color="#fff" />
+            </View>
+        );
+    }
+
     return (
         <View style={styles.root} onLayout={onLayout}>
             <StatusBar
@@ -891,7 +1090,7 @@ export default function ReelsPlayer() {
             />
             <FlatList
                 ref={flatListRef}
-                data={REELS_DATA}
+                data={reels}
                 keyExtractor={keyExtractor}
                 renderItem={renderItem}
                 pagingEnabled
