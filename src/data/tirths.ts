@@ -18,7 +18,6 @@ export type Tirth = {
   gallery: string[];
 };
 
-<<<<<<< HEAD
 export const TIRTHS: Tirth[] = [
   {
     id: 'shatrunjaya_palitana',
@@ -236,6 +235,3 @@ export const TIRTHS: Tirth[] = [
     ]
   }
 ];
-=======
-export const TIRTHS: Tirth[] = [];
->>>>>>> origin/main
