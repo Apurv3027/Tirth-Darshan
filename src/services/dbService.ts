@@ -3,6 +3,8 @@ import { isSupabaseConfigured } from '../config/supabase';
 import { TIRTHANKARS, Tirthankar } from '../data/tirthankars';
 import { TIRTHS, Tirth } from '../data/tirths';
 import { REELS_DATA, ReelData } from '../data/reels';
+import { CHANTS_DATA, Chant } from '../data/chants';
+import { WISDOM_DATA, WisdomQuote } from '../data/wisdom';
 
 // ── Snake-Case Mapping Helpers ──
 
@@ -66,6 +68,28 @@ const mapDbReelToFrontend = (db: any): ReelData => ({
   music: db.music || 'Original Audio',
 });
 
+const mapDbChantToFrontend = (db: any): Chant => ({
+  id: db.id,
+  title: db.title,
+  subtitle: db.subtitle,
+  lyrics: db.lyrics,
+  translation: db.translation || [],
+  audioUrl: db.audio_url || '',
+  durationSec: db.duration_sec || 30,
+  significance: db.significance || '',
+  category: db.category || 'Mantra',
+  accentColor: db.accent_color || '#C8960C',
+});
+
+const mapDbWisdomToFrontend = (db: any): WisdomQuote => ({
+  id: db.id,
+  text: db.text,
+  author: db.author,
+  source: db.source || '',
+  explanation: db.explanation || '',
+  themeColor: db.theme_color || '#C8960C',
+});
+
 // ── Unified Database Service ──
 
 export const dbService = {
@@ -92,7 +116,7 @@ export const dbService = {
       if (data && data.length > 0) {
         return data.map(mapDbTirthankarToFrontend);
       }
-      
+
       console.warn('[dbService] No data found in tirthankars table. Falling back to local data.');
       return TIRTHANKARS;
     } catch (err) {
@@ -334,6 +358,70 @@ export const dbService = {
     } catch (err) {
       console.error(`[dbService] Error adding comment to reel ${reelId}:`, err);
       throw err;
+    }
+  },
+
+  /**
+   * Fetch all Spiritual Chants & Shlokas.
+   * If Supabase is not configured or fails, it falls back to local CHANTS_DATA.
+   */
+  async getChants(): Promise<Chant[]> {
+    if (!isSupabaseConfigured()) {
+      console.log('[dbService] Supabase not configured. Using local Chants.');
+      return CHANTS_DATA;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('chants')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data && data.length > 0) {
+        return data.map(mapDbChantToFrontend);
+      }
+
+      console.warn('[dbService] No data found in chants table. Falling back to local data.');
+      return CHANTS_DATA;
+    } catch (err) {
+      console.error('[dbService] Error fetching Chants from Supabase:', err);
+      return CHANTS_DATA;
+    }
+  },
+
+  /**
+   * Fetch all Daily Wisdom Quotes.
+   * If Supabase is not configured or fails, it falls back to local WISDOM_DATA.
+   */
+  async getWisdom(): Promise<WisdomQuote[]> {
+    if (!isSupabaseConfigured()) {
+      console.log('[dbService] Supabase not configured. Using local Wisdom.');
+      return WISDOM_DATA;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('wisdom')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (error) {
+        throw error;
+      }
+
+      if (data && data.length > 0) {
+        return data.map(mapDbWisdomToFrontend);
+      }
+
+      console.warn('[dbService] No data found in wisdom table. Falling back to local data.');
+      return WISDOM_DATA;
+    } catch (err) {
+      console.error('[dbService] Error fetching Wisdom from Supabase:', err);
+      return WISDOM_DATA;
     }
   }
 };
