@@ -21,6 +21,7 @@ import {
 import { Tirth } from '../data/tirths';
 import { dbService } from '../services/dbService';
 import ScreenWrapper from '../components/ScreenWrapper';
+import { Theme } from '../config/theme';
 
 const { width } = Dimensions.get('window');
 
@@ -96,10 +97,10 @@ export const TirthDetailScreen = () => {
 
     if (loading) {
         return (
-            <ScreenWrapper backgroundColor="#FDFBF6">
+            <ScreenWrapper backgroundColor={Theme.background}>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator size="large" color="#C8960C" />
-                    <Text style={{ fontSize: 15, color: '#8B5E00', fontWeight: '700', marginTop: 14 }}>
+                    <ActivityIndicator size="large" color={Theme.accent} />
+                    <Text style={{ fontSize: 15, color: Theme.textPrimary, fontWeight: '700', marginTop: 14 }}>
                         Entering holy sanctuary...
                     </Text>
                 </View>
@@ -109,7 +110,7 @@ export const TirthDetailScreen = () => {
 
     if (!tirth) {
         return (
-            <ScreenWrapper backgroundColor="#FDFBF6">
+            <ScreenWrapper backgroundColor={Theme.background}>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ color: '#7A7A7A', fontSize: 16 }}>Tirth not found</Text>
                 </View>
@@ -125,7 +126,7 @@ export const TirthDetailScreen = () => {
     ];
 
     return (
-        <ScreenWrapper backgroundColor="#FDFBF6">
+        <ScreenWrapper backgroundColor={Theme.background}>
             {/* Header */}
             <View style={s.topBar}>
                 <TouchableOpacity style={s.iconBtn} onPress={() => nav.goBack()}>
@@ -293,7 +294,7 @@ export const TirthDetailScreen = () => {
 /* ---------------- STYLES ---------------- */
 
 const s = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#FDFBF6' },
+    container: { flex: 1, backgroundColor: Theme.background },
 
     topBar: {
         flexDirection: 'row',
@@ -301,9 +302,9 @@ const s = StyleSheet.create({
         paddingTop: Platform.OS === 'ios' ? 55 : 15,
         paddingHorizontal: 16,
         paddingBottom: 12,
-        backgroundColor: '#FDFBF6',
+        backgroundColor: Theme.background,
         borderBottomWidth: 1,
-        borderBottomColor: '#F1E4C7',
+        borderBottomColor: Theme.borderGold,
     },
 
     iconBtn: {
@@ -319,7 +320,7 @@ const s = StyleSheet.create({
 
     iconText: {
         fontSize: 18,
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         fontWeight: '700',
     },
 
@@ -328,7 +329,7 @@ const s = StyleSheet.create({
         textAlign: 'center',
         fontSize: 15,
         fontWeight: '800',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         marginHorizontal: 10,
     },
 
@@ -338,7 +339,7 @@ const s = StyleSheet.create({
 
     badge: {
         alignSelf: 'flex-start',
-        backgroundColor: '#FFF5D8',
+        backgroundColor: Theme.accentLight,
         borderRadius: 30,
         paddingHorizontal: 12,
         paddingVertical: 6,
@@ -347,20 +348,20 @@ const s = StyleSheet.create({
 
     badgeText: {
         fontSize: 12,
-        color: '#C8960C',
+        color: Theme.textGold,
         fontWeight: '700',
     },
 
     name: {
         fontSize: 26,
         fontWeight: '800',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
     },
 
     location: {
         marginTop: 6,
         fontSize: 14,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
     },
 
     quickRow: {
@@ -385,18 +386,18 @@ const s = StyleSheet.create({
     infoValue: {
         fontSize: 14,
         fontWeight: '700',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
     },
 
     tabsWrap: {
-        backgroundColor: '#FDFBF6',
+        backgroundColor: Theme.background,
         paddingHorizontal: 14,
         paddingBottom: 10,
     },
 
     tabs: {
         flexDirection: 'row',
-        backgroundColor: '#FFF8E7',
+        backgroundColor: Theme.accentLight,
         borderRadius: 18,
         padding: 6,
     },
@@ -409,7 +410,7 @@ const s = StyleSheet.create({
     },
 
     tabActive: {
-        backgroundColor: '#C8960C',
+        backgroundColor: Theme.accent,
     },
 
     tabIcon: {
@@ -441,13 +442,13 @@ const s = StyleSheet.create({
     sectionTitle: {
         fontSize: 13,
         fontWeight: '800',
-        color: '#C8960C',
+        color: Theme.textGold,
         marginBottom: 8,
     },
 
     body: {
         fontSize: 14,
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         lineHeight: 22,
     },
 
@@ -465,7 +466,7 @@ const s = StyleSheet.create({
     transportTitle: {
         fontSize: 12,
         fontWeight: '800',
-        color: '#C8960C',
+        color: Theme.accent,
         marginBottom: 4,
     },
 
@@ -484,7 +485,7 @@ const s = StyleSheet.create({
 
     vrBtn: {
         marginTop: 14,
-        backgroundColor: '#C8960C',
+        backgroundColor: Theme.accent,
         paddingVertical: 14,
         borderRadius: 14,
         alignItems: 'center',
@@ -506,7 +507,7 @@ const s = StyleSheet.create({
     footer: {
         textAlign: 'center',
         paddingVertical: 30,
-        color: '#A68A54',
+        color: Theme.accent,
         letterSpacing: 2,
     },
 });

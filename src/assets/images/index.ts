@@ -1,3 +1,3 @@
 export const Images = {
-  splashScreenLogo: require('./splash-screen-logo.png'),
+  splashScreenLogo: require('../icons/tirth_darshan_icon.png'),
 };

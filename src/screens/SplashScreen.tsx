@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
 import { Images } from '../assets/images';
+import { Theme } from '../config/theme';
 
 type Props = {
     navigation: any;
@@ -49,8 +50,8 @@ export const SplashScreen = ({ navigation }: Props) => {
     }, [navigation, opacityAnim, scaleAnim, textAnim]);
 
     return (
-        <ScreenWrapper backgroundColor="#FDFBF6">
-            <StatusBar barStyle="dark-content" backgroundColor="#FDFBF6" />
+        <ScreenWrapper backgroundColor={Theme.primary}>
+            <StatusBar barStyle="light-content" backgroundColor={Theme.primary} />
 
             <View style={styles.container}>
                 <Animated.View
@@ -62,13 +63,11 @@ export const SplashScreen = ({ navigation }: Props) => {
                         },
                     ]}
                 >
-                    <View style={styles.innerCircle}>
-                        <Image
-                            source={Images.splashScreenLogo}
-                            style={styles.logoImage}
-                            resizeMode="contain"
-                        />
-                    </View>
+                    <Image
+                        source={Images.splashScreenLogo}
+                        style={styles.logoImage}
+                        resizeMode="cover"
+                    />
                 </Animated.View>
 
                 <Animated.View
@@ -83,11 +82,9 @@ export const SplashScreen = ({ navigation }: Props) => {
 
                 {/* Loader */}
                 <View style={styles.footer}>
-                    <ActivityIndicator size="small" color="#D4AF37" />
+                    <ActivityIndicator size="small" color={Theme.accent} />
                     <Text style={styles.loadingText}>Loading...</Text>
                 </View>
-
-                {/* <Text style={styles.footer}>🙏 Jai Jinendra</Text> */}
             </View>
         </ScreenWrapper>
     );
@@ -105,41 +102,36 @@ const styles = StyleSheet.create({
         width: 180,
         height: 180,
         borderRadius: 90,
-        borderWidth: 2,
-        borderColor: '#D4AF37',
+        borderWidth: 3,
+        borderColor: Theme.accent,
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 28,
-        backgroundColor: '#FFF8E7',
+        backgroundColor: Theme.primary,
         elevation: 8,
-    },
-
-    innerCircle: {
-        width: 145,
-        height: 145,
-        borderRadius: 72,
-        backgroundColor: '#FFFFFF',
-        justifyContent: 'center',
-        alignItems: 'center',
+        overflow: 'hidden', // clips the corners of the square image
     },
 
     logoImage: {
-        width: 130,
-        height: 130,
+        width: 174,
+        height: 174,
+        borderRadius: 87,
     },
 
     title: {
         fontSize: 32,
         fontWeight: '800',
-        color: '#8B5E00',
+        color: '#FFFFFF',
         textAlign: 'center',
     },
 
     subtitle: {
         fontSize: 14,
-        color: '#7A7A7A',
+        color: Theme.accent,
         marginTop: 10,
         textAlign: 'center',
+        fontWeight: '600',
+        letterSpacing: 1.2,
     },
 
     loaderContainer: {
@@ -150,13 +142,13 @@ const styles = StyleSheet.create({
     loadingText: {
         marginTop: 8,
         fontSize: 13,
-        color: '#9C7C38',
+        color: Theme.accent,
+        opacity: 0.8,
     },
 
     footer: {
         position: 'absolute',
         bottom: 40,
-        color: '#9C7C38',
-        fontSize: 13,
+        alignItems: 'center',
     },
 });

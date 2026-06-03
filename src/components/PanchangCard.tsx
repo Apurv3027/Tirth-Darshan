@@ -13,6 +13,7 @@ import {
     Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Theme } from '../config/theme';
 
 // ── Types & Interfaces ──
 interface City {
@@ -636,7 +637,7 @@ export const PanchangCard = () => {
 
                 {loading ? (
                     <View style={styles.cardLoaderContainer}>
-                        <ActivityIndicator size="small" color="#C8960C" />
+                        <ActivityIndicator size="small" color={Theme.accent} />
                         <Text style={styles.loaderText}>Calculating Celestial Alignment...</Text>
                     </View>
                 ) : (
@@ -709,7 +710,7 @@ export const PanchangCard = () => {
                             <View style={styles.activePanelHeader}>
                                 <View style={styles.activeChoghadiyaTitleBox}>
                                     <View style={[styles.statusDot, { backgroundColor: activeChoghadiya.color }]} />
-                                    <Text style={[styles.activeChoghadiyaName, { color: '#5B3A00' }]}>
+                                    <Text style={[styles.activeChoghadiyaName, { color: Theme.textPrimary }]}>
                                         {activeChoghadiya.name}
                                     </Text>
                                 </View>
@@ -883,14 +884,14 @@ export const PanchangCard = () => {
 
 const styles = StyleSheet.create({
     panchangCard: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Theme.surface,
         borderRadius: 20,
         padding: 18,
         borderWidth: 1.5,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
         marginBottom: 24,
         elevation: 3,
-        shadowColor: '#8B5E00',
+        shadowColor: Theme.primary,
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.08,
         shadowRadius: 8,
@@ -904,12 +905,12 @@ const styles = StyleSheet.create({
     locationSelector: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#FFF8E7',
+        backgroundColor: Theme.accentLight,
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: '#FDF1D5',
+        borderColor: Theme.borderGold,
         flex: 1,
         marginRight: 10,
     },
@@ -920,16 +921,16 @@ const styles = StyleSheet.create({
     locationName: {
         fontSize: 13,
         fontWeight: '800',
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         flex: 1,
     },
     dropdownArrow: {
         fontSize: 10,
-        color: '#C8960C',
+        color: Theme.textGold,
         marginLeft: 4,
     },
     gpsButton: {
-        backgroundColor: '#5B3A00',
+        backgroundColor: Theme.secondary,
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 20,
@@ -949,14 +950,14 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     badgeGolden: {
-        backgroundColor: '#FFF5D8',
+        backgroundColor: Theme.accentLight,
         borderRadius: 30,
         paddingHorizontal: 12,
         paddingVertical: 5,
     },
     badgeGoldenText: {
         fontSize: 11,
-        color: '#C8960C',
+        color: Theme.textGold,
         fontWeight: '800',
         letterSpacing: 0.3,
     },
@@ -968,25 +969,25 @@ const styles = StyleSheet.create({
     panchangTithi: {
         fontSize: 20,
         fontWeight: '800',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
     },
     panchangGregorian: {
         fontSize: 12,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         marginTop: 4,
         fontWeight: '600',
     },
     divider: {
         height: 1,
-        backgroundColor: '#F1E4C7',
+        backgroundColor: Theme.borderGold,
         marginVertical: 14,
     },
     tabBar: {
         flexDirection: 'row',
-        backgroundColor: '#FFFDF9',
+        backgroundColor: Theme.background,
         borderRadius: 14,
         borderWidth: 1,
-        borderColor: '#F7EBD2',
+        borderColor: Theme.borderGold,
         padding: 4,
         marginBottom: 14,
     },
@@ -997,7 +998,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     activeTabButton: {
-        backgroundColor: '#FFF5D8',
+        backgroundColor: Theme.accentLight,
     },
     tabText: {
         fontSize: 12,
@@ -1005,7 +1006,7 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
     activeTabText: {
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         fontWeight: '800',
     },
     tabContent: {
@@ -1017,18 +1018,18 @@ const styles = StyleSheet.create({
     },
     loaderText: {
         fontSize: 12,
-        color: '#C8960C',
+        color: Theme.textGold,
         fontWeight: '700',
         marginTop: 8,
     },
     sunRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: '#FFFDF9',
+        backgroundColor: Theme.background,
         borderRadius: 14,
         padding: 12,
         borderWidth: 1,
-        borderColor: '#F7EBD2',
+        borderColor: Theme.borderGold,
         marginBottom: 14,
     },
     sunItem: {
@@ -1049,15 +1050,15 @@ const styles = StyleSheet.create({
     sunValue: {
         fontSize: 13,
         fontWeight: '800',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         marginTop: 2,
     },
     verticalDivider: {
         width: 1,
-        backgroundColor: '#F1E4C7',
+        backgroundColor: Theme.borderGold,
     },
     activeChoghadiyaPanel: {
-        backgroundColor: '#FFFDF9',
+        backgroundColor: Theme.background,
         borderRadius: 16,
         padding: 16,
         borderWidth: 1.5,
@@ -1123,7 +1124,7 @@ const styles = StyleSheet.create({
     },
     timelineSectionTitle: {
         fontSize: 13,
-        color: '#8B5E00',
+        color: Theme.textGold,
         fontWeight: '800',
         marginBottom: 10,
         textTransform: 'uppercase',
@@ -1132,16 +1133,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#FFFDF9',
+        backgroundColor: Theme.background,
         borderWidth: 1,
-        borderColor: '#F7EBD2',
+        borderColor: Theme.borderGold,
         borderRadius: 12,
         paddingVertical: 10,
         paddingHorizontal: 12,
         marginBottom: 8,
     },
     timelineActiveItem: {
-        backgroundColor: '#FFFDF0',
+        backgroundColor: Theme.accentLight,
         borderWidth: 1.5,
     },
     timelineLeft: {
@@ -1180,7 +1181,7 @@ const styles = StyleSheet.create({
     },
     timelineNameText: {
         fontSize: 13,
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         fontWeight: '800',
     },
     timelineQualityText: {
@@ -1189,9 +1190,9 @@ const styles = StyleSheet.create({
         marginTop: 2,
     },
     pachchkhanCard: {
-        backgroundColor: '#FFFDF9',
+        backgroundColor: Theme.background,
         borderWidth: 1,
-        borderColor: '#F7EBD2',
+        borderColor: Theme.borderGold,
         borderRadius: 14,
         padding: 12,
         marginBottom: 10,
@@ -1213,15 +1214,15 @@ const styles = StyleSheet.create({
     pachchkhanName: {
         fontSize: 14,
         fontWeight: '800',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
     },
     pachchkhanHindi: {
         fontSize: 10,
-        color: '#C8960C',
+        color: Theme.textGold,
         fontWeight: '600',
     },
     pachchkhanTimeBox: {
-        backgroundColor: '#FFF5D8',
+        backgroundColor: Theme.accentLight,
         borderRadius: 8,
         paddingHorizontal: 8,
         paddingVertical: 4,
@@ -1229,7 +1230,7 @@ const styles = StyleSheet.create({
     pachchkhanTime: {
         fontSize: 12,
         fontWeight: '800',
-        color: '#8B5E00',
+        color: Theme.textGold,
     },
     pachchkhanDesc: {
         fontSize: 11,
@@ -1243,7 +1244,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     modalContent: {
-        backgroundColor: '#FDFBF6',
+        backgroundColor: Theme.background,
         borderTopLeftRadius: 24,
         borderTopRightRadius: 24,
         padding: 20,
@@ -1258,37 +1259,37 @@ const styles = StyleSheet.create({
     modalTitle: {
         fontSize: 18,
         fontWeight: '800',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
     },
     closeButton: {
         width: 32,
         height: 32,
         borderRadius: 16,
-        backgroundColor: '#FFF5D8',
+        backgroundColor: Theme.accentLight,
         justifyContent: 'center',
         alignItems: 'center',
     },
     closeText: {
         fontSize: 12,
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         fontWeight: '800',
     },
     searchInput: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Theme.surface,
         borderWidth: 1.5,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
         borderRadius: 12,
         paddingHorizontal: 12,
         paddingVertical: 10,
         fontSize: 14,
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         fontWeight: '600',
         marginBottom: 14,
     },
     gpsRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#FFF5D8',
+        backgroundColor: Theme.accentLight,
         borderRadius: 12,
         padding: 12,
         marginBottom: 14,
@@ -1300,7 +1301,7 @@ const styles = StyleSheet.create({
     gpsRowText: {
         fontSize: 13,
         fontWeight: '800',
-        color: '#8B5E00',
+        color: Theme.textPrimary,
     },
     cityListItem: {
         flexDirection: 'row',
@@ -1309,10 +1310,10 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 8,
         borderBottomWidth: 1,
-        borderBottomColor: '#F3E8D0',
+        borderBottomColor: Theme.border,
     },
     cityListActiveItem: {
-        backgroundColor: '#FFF8E7',
+        backgroundColor: Theme.accentLight,
         borderRadius: 8,
     },
     cityListText: {
@@ -1321,7 +1322,7 @@ const styles = StyleSheet.create({
         color: '#4B5563',
     },
     cityListActiveText: {
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         fontWeight: '800',
     },
     cityListState: {
@@ -1332,7 +1333,7 @@ const styles = StyleSheet.create({
     },
     checkIcon: {
         fontSize: 14,
-        color: '#C8960C',
+        color: Theme.accent,
         fontWeight: '800',
     },
 });

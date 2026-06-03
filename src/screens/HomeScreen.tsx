@@ -17,6 +17,7 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ScreenWrapper from '../components/ScreenWrapper';
 import { PanchangCard } from '../components/PanchangCard';
+import { Theme } from '../config/theme';
 import { dbService } from '../services/dbService';
 import { Tirth } from '../data/tirths';
 import { Tirthankar } from '../data/tirthankars';
@@ -246,9 +247,9 @@ export const HomeScreen = () => {
 
     if (loading) {
         return (
-            <View style={[styles.loadingContainer, { backgroundColor: '#FDFBF6' }]}>
-                <StatusBar barStyle="dark-content" backgroundColor="#FDFBF6" />
-                <ActivityIndicator size="large" color="#C8960C" />
+            <View style={[styles.loadingContainer, { backgroundColor: Theme.background }]}>
+                <StatusBar barStyle="dark-content" backgroundColor={Theme.background} />
+                <ActivityIndicator size="large" color={Theme.accent} />
                 <Text style={styles.loadingText}>Opening Divine Gateway...</Text>
                 <Text style={styles.loadingSubtext}>TirthDarshan Dashboard Loading</Text>
             </View>
@@ -289,8 +290,8 @@ export const HomeScreen = () => {
     const popularTirths = tirths.slice(0, 5); // Take first 5 prominent ones
 
     return (
-        <ScreenWrapper scroll backgroundColor="#FDFBF6">
-            <StatusBar barStyle="dark-content" backgroundColor="#FDFBF6" />
+        <ScreenWrapper scroll backgroundColor={Theme.background}>
+            <StatusBar barStyle="dark-content" backgroundColor={Theme.background} />
             <View style={styles.container}>
 
                 {/* ── HEADER SECTION ── */}
@@ -324,12 +325,12 @@ export const HomeScreen = () => {
                         activeOpacity={0.8}
                         onPress={() => nav.navigate('TirthankarList')}
                     >
-                        <View style={[styles.categoryBadge, { backgroundColor: '#FFF5D8', borderColor: '#FDF1D5' }]}>
-                            <Text style={[styles.categoryBadgeText, { color: '#8B5E00' }]}>
+                        <View style={[styles.categoryBadge, { backgroundColor: Theme.accentLight, borderColor: Theme.borderGold }]}>
+                            <Text style={[styles.categoryBadgeText, { color: Theme.textGold }]}>
                                 {tirthankars.length || '24'}
                             </Text>
                         </View>
-                        <View style={[styles.cardIconBox, { backgroundColor: '#FFF5D8' }]}>
+                        <View style={[styles.cardIconBox, { backgroundColor: Theme.accentLight }]}>
                             <Text style={styles.cardEmoji}>🕉️</Text>
                         </View>
                         <Text style={styles.cardTitle}>24 Tirthankars</Text>
@@ -459,7 +460,7 @@ export const HomeScreen = () => {
                 {/* ── TIRTHANKAR OF THE DAY SPOTLIGHT ── */}
                 {tirthankarOfTheDay && (() => {
                     const associatedTirths = tirths.filter(t => t.tirthankarId === tirthankarOfTheDay.id);
-                    const tirthColor = tirthankarOfTheDay.colorHex || '#C8960C';
+                    const tirthColor = tirthankarOfTheDay.colorHex || Theme.accent;
                     
                     // Combine database Tirths with static famous ones to always have a rich chip selection
                     const chipsList = [
@@ -644,7 +645,7 @@ export const HomeScreen = () => {
                 <Text style={styles.sectionTitle}>Spiritual Chants & Shloka</Text>
                 {chants.length > 0 && (() => {
                     const activeChant = chants[activeChantIndex] || chants[0];
-                    const chantColor = activeChant.accentColor || '#C8960C';
+                    const chantColor = activeChant.accentColor || Theme.primary;
                     return (
                         <View style={[styles.audioCard, { backgroundColor: chantColor }]}>
                             {/* Horizontal scroll tabs for chants selector */}
@@ -799,7 +800,7 @@ export const HomeScreen = () => {
                 <Text style={styles.sectionTitle}>Daily Wisdom</Text>
                 {wisdom.length > 0 && (() => {
                     const activeQuote = wisdom[activeWisdomIndex] || wisdom[0];
-                    const qColor = activeQuote.themeColor || '#C8960C';
+                    const qColor = activeQuote.themeColor || Theme.accent;
                     return (
                         <TouchableOpacity
                             style={[
@@ -845,7 +846,7 @@ export const HomeScreen = () => {
                             <Text style={[
                                 styles.quoteText, 
                                 { 
-                                    color: '#3D2F15', 
+                                    color: Theme.textPrimary, 
                                     lineHeight: 22, 
                                     fontSize: 13.5, 
                                     paddingRight: 6,
@@ -862,13 +863,13 @@ export const HomeScreen = () => {
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: qColor, marginRight: 8 }} />
-                                    <Text style={{ fontSize: 12, fontWeight: '800', color: '#4B381A' }}>
+                                    <Text style={{ fontSize: 12, fontWeight: '800', color: Theme.textPrimary }}>
                                         {activeQuote.author}
                                     </Text>
                                 </View>
 
                                 <View style={{ 
-                                    backgroundColor: '#FFFDF9', 
+                                    backgroundColor: Theme.background, 
                                     borderColor: qColor + '30', 
                                     borderWidth: 1, 
                                     borderRadius: 10, 
@@ -905,13 +906,13 @@ const styles = StyleSheet.create({
     },
     loadingText: {
         fontSize: 16,
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         fontWeight: '700',
         marginTop: 14,
     },
     loadingSubtext: {
         fontSize: 13,
-        color: '#8A8A8A',
+        color: Theme.textSecondary,
         marginTop: 4,
     },
     container: {
@@ -933,9 +934,9 @@ const styles = StyleSheet.create({
         width: 44,
         height: 44,
         borderRadius: 22,
-        backgroundColor: '#FFF8E7',
+        backgroundColor: Theme.accentLight,
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 2,
@@ -945,7 +946,7 @@ const styles = StyleSheet.create({
     },
     greeting: {
         fontSize: 13,
-        color: '#C8960C',
+        color: Theme.accent,
         fontWeight: '700',
         textTransform: 'uppercase',
         letterSpacing: 1.2,
@@ -954,12 +955,12 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
         fontWeight: '900',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         letterSpacing: 0.5,
     },
     subtitle: {
         fontSize: 13,
-        color: '#6B7280',
+        color: Theme.textSecondary,
         marginTop: 6,
         lineHeight: 18,
     },
@@ -974,7 +975,7 @@ const styles = StyleSheet.create({
     },
     seeAllText: {
         fontSize: 12,
-        color: '#C8960C',
+        color: Theme.accent,
         fontWeight: '700',
     },
     tirthScrollContent: {
@@ -986,7 +987,7 @@ const styles = StyleSheet.create({
         width: width * 0.65,
         height: 180,
         borderRadius: 20,
-        backgroundColor: '#FFF',
+        backgroundColor: Theme.surface,
         marginRight: 14,
         overflow: 'hidden',
         elevation: 3,
@@ -1009,7 +1010,7 @@ const styles = StyleSheet.create({
         left: 12,
     },
     vrBadge: {
-        backgroundColor: 'rgba(200, 150, 12, 0.9)',
+        backgroundColor: 'rgba(212, 175, 55, 0.9)',
         borderRadius: 8,
         paddingHorizontal: 8,
         paddingVertical: 4,
@@ -1033,7 +1034,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(255, 255, 255, 0.3)',
     },
     seasonBadgeText: {
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         fontSize: 9,
         fontWeight: '800',
     },
@@ -1054,24 +1055,24 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
     },
     tirthHorizontalTitle: {
-        color: '#5B3A00', // Signature gold-brown
+        color: Theme.textPrimary, // Signature gold-brown
         fontSize: 14,
         fontWeight: '800',
     },
     tirthHorizontalSub: {
-        color: '#8A8A8A',
+        color: Theme.textSecondary,
         fontSize: 10,
         marginTop: 2,
         fontWeight: '600',
     },
     tirthHorizontalDivider: {
         height: 1,
-        backgroundColor: '#F3E8D0',
+        backgroundColor: Theme.borderGold,
         marginVertical: 6,
     },
     tirthHorizontalTirthankar: {
         fontSize: 9,
-        color: '#C8960C',
+        color: Theme.accent,
         fontWeight: '800',
         textTransform: 'uppercase',
         letterSpacing: 0.3,
@@ -1079,14 +1080,14 @@ const styles = StyleSheet.create({
 
     // Spotlight Card
     spotlightCard: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Theme.surface,
         borderRadius: 22,
         padding: 18,
         borderWidth: 1.5,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
         marginBottom: 24,
         elevation: 4,
-        shadowColor: '#8B5E00',
+        shadowColor: Theme.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.08,
         shadowRadius: 10,
@@ -1102,7 +1103,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#F3E8D0',
+        borderColor: Theme.borderGold,
     },
     spotlightEmoji: {
         fontSize: 32,
@@ -1112,7 +1113,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     spotlightBadge: {
-        backgroundColor: '#FFF5D8',
+        backgroundColor: Theme.accentLight,
         borderRadius: 8,
         paddingHorizontal: 8,
         paddingVertical: 3,
@@ -1122,17 +1123,17 @@ const styles = StyleSheet.create({
     spotlightBadgeText: {
         fontSize: 9,
         fontWeight: '800',
-        color: '#C8960C',
+        color: Theme.textGold,
         letterSpacing: 0.3,
     },
     spotlightName: {
         fontSize: 19,
         fontWeight: '800',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
     },
     spotlightGuj: {
         fontSize: 12,
-        color: '#C8960C',
+        color: Theme.textGold,
         fontWeight: '600',
         marginTop: 2,
     },
@@ -1155,19 +1156,19 @@ const styles = StyleSheet.create({
     spotlightSpecVal: {
         fontSize: 12,
         fontWeight: '700',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
     },
     spotlightTeachingBox: {
         backgroundColor: '#FFFDF9',
         borderWidth: 1,
-        borderColor: '#FDF1D5',
+        borderColor: Theme.borderGold,
         borderRadius: 14,
         padding: 14,
         marginBottom: 14,
     },
     spotlightTeachingQuote: {
         fontSize: 13,
-        color: '#6B4F00',
+        color: Theme.textSecondary,
         lineHeight: 18,
         fontStyle: 'italic',
         fontWeight: '500',
@@ -1185,14 +1186,14 @@ const styles = StyleSheet.create({
     },
     spotlightArrow: {
         fontSize: 16,
-        color: '#C8960C',
+        color: Theme.accent,
         fontWeight: '800',
     },
 
     // Category Grid
     sectionTitle: {
         fontSize: 16,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         fontWeight: '800',
         marginBottom: 14,
         letterSpacing: 0.6,
@@ -1206,12 +1207,12 @@ const styles = StyleSheet.create({
     },
     card: {
         width: '48%',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Theme.surface,
         borderRadius: 20,
         padding: 14,
         marginBottom: 14,
         borderWidth: 1,
-        borderColor: '#F3E8D0',
+        borderColor: Theme.borderGold,
         elevation: 2,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
@@ -1231,20 +1232,20 @@ const styles = StyleSheet.create({
     },
     cardTitle: {
         fontSize: 14,
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         fontWeight: '800',
         marginBottom: 4,
     },
     cardDesc: {
         fontSize: 11,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         lineHeight: 15,
         fontWeight: '500',
     },
 
     // Audio Player Card
     audioCard: {
-        backgroundColor: '#5B3A00',
+        backgroundColor: Theme.primary,
         borderRadius: 22,
         padding: 18,
         marginBottom: 24,
@@ -1265,7 +1266,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     audioLabel: {
-        color: '#E0A96D',
+        color: Theme.accent,
         fontSize: 9,
         fontWeight: '800',
         letterSpacing: 1.2,
@@ -1286,11 +1287,11 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     pauseButton: {
-        backgroundColor: '#E0A96D',
+        backgroundColor: Theme.accent,
     },
     playButtonText: {
         fontSize: 18,
-        color: '#5B3A00',
+        color: Theme.primary,
     },
     progressContainer: {
         marginBottom: 14,
@@ -1303,7 +1304,7 @@ const styles = StyleSheet.create({
     },
     progressBarFill: {
         height: '100%',
-        backgroundColor: '#E0A96D',
+        backgroundColor: Theme.accent,
     },
     timeRow: {
         flexDirection: 'row',
@@ -1311,7 +1312,7 @@ const styles = StyleSheet.create({
         marginTop: 6,
     },
     timeText: {
-        color: '#D4AF37',
+        color: Theme.accent,
         fontSize: 10,
         fontWeight: '600',
     },
@@ -1324,7 +1325,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(255, 255, 255, 0.08)',
     },
     sanskritText: {
-        color: '#FFF8E7',
+        color: '#FFFFFF',
         fontSize: 15,
         lineHeight: 24,
         fontWeight: '700',
@@ -1336,7 +1337,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
     },
     expandToggleText: {
-        color: '#E0A96D',
+        color: Theme.accent,
         fontSize: 11,
         fontWeight: '700',
     },
@@ -1356,18 +1357,18 @@ const styles = StyleSheet.create({
 
     // Quote Card
     quoteCard: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Theme.surface,
         borderRadius: 20,
         padding: 20,
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
         marginBottom: 24,
         overflow: 'hidden',
         elevation: 2,
     },
     quoteMark: {
         fontSize: 48,
-        color: '#F1E4C7',
+        color: Theme.borderGold,
         position: 'absolute',
         top: -10,
         left: 12,
@@ -1375,7 +1376,7 @@ const styles = StyleSheet.create({
     },
     quoteText: {
         fontSize: 14,
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         fontWeight: '600',
         lineHeight: 22,
         fontStyle: 'italic',
@@ -1383,7 +1384,7 @@ const styles = StyleSheet.create({
     },
     quoteAuthor: {
         marginTop: 12,
-        color: '#C8960C',
+        color: Theme.textGold,
         fontSize: 12,
         fontWeight: '700',
         textAlign: 'right',
@@ -1392,13 +1393,13 @@ const styles = StyleSheet.create({
     // Dividers
     divider: {
         height: 1,
-        backgroundColor: '#F3E8D0',
+        backgroundColor: Theme.borderGold,
         marginVertical: 12,
     },
     verticalDivider: {
         width: 1,
         height: 24,
-        backgroundColor: '#F3E8D0',
+        backgroundColor: Theme.borderGold,
     },
 
     // Category Badge
@@ -1421,9 +1422,9 @@ const styles = StyleSheet.create({
     // Spotlight Interactive Elements
     teachingCycleBtn: {
         marginTop: 10,
-        backgroundColor: '#FFFDF9',
+        backgroundColor: Theme.background,
         borderWidth: 1,
-        borderColor: '#FDF1D5',
+        borderColor: Theme.borderGold,
         borderRadius: 8,
         paddingVertical: 6,
         paddingHorizontal: 12,
@@ -1432,28 +1433,28 @@ const styles = StyleSheet.create({
     teachingCycleText: {
         fontSize: 10,
         fontWeight: '800',
-        color: '#C8960C',
+        color: Theme.accent,
     },
     kalyanakToggle: {
         alignSelf: 'center',
         paddingVertical: 8,
         paddingHorizontal: 16,
-        backgroundColor: '#FFF8E7',
+        backgroundColor: Theme.accentLight,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: '#FDF1D5',
+        borderColor: Theme.borderGold,
         marginBottom: 12,
     },
     kalyanakToggleText: {
         fontSize: 11,
         fontWeight: '800',
-        color: '#8B5E00',
+        color: Theme.textPrimary,
     },
     kalyanakContainer: {
         backgroundColor: '#FFFDF9',
         borderRadius: 14,
         borderWidth: 1,
-        borderColor: '#FDF1D5',
+        borderColor: Theme.borderGold,
         padding: 12,
         marginBottom: 12,
         gap: 6,
@@ -1464,17 +1465,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 4,
         borderBottomWidth: 0.5,
-        borderBottomColor: '#FDF1D5',
+        borderBottomColor: Theme.borderGold,
     },
     kalyanakLabel: {
         fontSize: 11,
         fontWeight: '800',
-        color: '#8B5E00',
+        color: Theme.textPrimary,
     },
     kalyanakValue: {
         fontSize: 11,
         fontWeight: '700',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         flex: 1,
         textAlign: 'right',
         marginLeft: 20,
@@ -1487,7 +1488,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     footerLine: {
-        color: '#A68A54',
+        color: Theme.accent,
         fontSize: 14,
         fontWeight: '700',
         letterSpacing: 1.5,
@@ -1532,7 +1533,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFDF9',
         borderRadius: 14,
         borderWidth: 1,
-        borderColor: '#FDF1D5',
+        borderColor: Theme.borderGold,
         padding: 16,
         marginBottom: 12,
         position: 'relative',
@@ -1543,7 +1544,7 @@ const styles = StyleSheet.create({
         top: 24,
         bottom: 24,
         width: 1.5,
-        backgroundColor: '#F3E8D0',
+        backgroundColor: Theme.borderGold,
     },
     kalyanakTimelineNode: {
         flexDirection: 'row',
@@ -1565,12 +1566,12 @@ const styles = StyleSheet.create({
     kalyanakTimelineLabel: {
         fontSize: 11,
         fontWeight: '800',
-        color: '#8B5E00',
+        color: Theme.textPrimary,
     },
     kalyanakTimelineValue: {
         fontSize: 11,
         fontWeight: '700',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         marginTop: 2,
     },
 
@@ -1593,7 +1594,7 @@ const styles = StyleSheet.create({
         borderColor: '#FFFFFF',
     },
     chantTabText: {
-        color: '#E0A96D',
+        color: Theme.accent,
         fontSize: 11,
         fontWeight: '700',
     },

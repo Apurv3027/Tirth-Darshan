@@ -15,6 +15,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Tirthankar } from '../data/tirthankars';
 import { dbService } from '../services/dbService';
 import { RootStackParams } from '../navigation';
+import { Theme } from '../config/theme';
 
 type Nav = NativeStackNavigationProp<RootStackParams>;
 
@@ -123,8 +124,8 @@ export const TirthankarListScreen = () => {
     if (loading) {
         return (
             <View style={[s.container, s.loadingContainer]}>
-                <StatusBar barStyle="dark-content" backgroundColor="#FDFBF6" />
-                <ActivityIndicator size="large" color="#C8960C" />
+                <StatusBar barStyle="dark-content" backgroundColor={Theme.background} />
+                <ActivityIndicator size="large" color={Theme.accent} />
                 <Text style={s.loadingText}>Connecting to divine portal...</Text>
                 <Text style={s.loadingSubtext}>Loading Tirthankar data</Text>
             </View>
@@ -133,7 +134,7 @@ export const TirthankarListScreen = () => {
 
     return (
         <View style={s.container}>
-            <StatusBar barStyle="dark-content" backgroundColor="#FDFBF6" />
+            <StatusBar barStyle="dark-content" backgroundColor={Theme.background} />
 
             {/* Header */}
             <View style={s.header}>
@@ -210,41 +211,41 @@ const s = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#FDFBF6',
+        backgroundColor: Theme.background,
     },
     loadingText: {
         fontSize: 16,
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         fontWeight: '700',
         marginTop: 14,
     },
     loadingSubtext: {
         fontSize: 13,
-        color: '#8A8A8A',
+        color: Theme.textSecondary,
         marginTop: 4,
     },
     container: {
         flex: 1,
-        backgroundColor: '#FDFBF6',
+        backgroundColor: Theme.background,
     },
 
     header: {
         paddingTop: Platform.OS === 'ios' ? 56 : 24,
         paddingBottom: 12,
         paddingHorizontal: 20,
-        backgroundColor: '#FDFBF6',
+        backgroundColor: Theme.background,
     },
 
     headerTitle: {
         fontSize: 28,
         fontWeight: '800',
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         letterSpacing: 0.5,
     },
 
     headerSubtitle: {
         fontSize: 13,
-        color: '#8A8A8A',
+        color: Theme.textSecondary,
         marginTop: 2,
         letterSpacing: 1,
         textTransform: 'uppercase',
@@ -253,13 +254,13 @@ const s = StyleSheet.create({
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Theme.surface,
         marginHorizontal: 16,
         marginBottom: 12,
         borderRadius: 14,
         paddingHorizontal: 14,
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
         elevation: 2,
     },
 
@@ -272,11 +273,11 @@ const s = StyleSheet.create({
         flex: 1,
         paddingVertical: 13,
         fontSize: 14,
-        color: '#5B3A00',
+        color: Theme.textPrimary,
     },
 
     clearBtn: {
-        color: '#8A8A8A',
+        color: Theme.textSecondary,
         fontSize: 14,
         padding: 4,
     },
@@ -292,29 +293,29 @@ const s = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 20,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Theme.surface,
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
     },
 
     filterBtnActive: {
-        backgroundColor: '#FFF3D6',
-        borderColor: '#C8960C',
+        backgroundColor: Theme.accentLight,
+        borderColor: Theme.accent,
     },
 
     filterText: {
         fontSize: 12,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         fontWeight: '600',
     },
 
     filterTextActive: {
-        color: '#C8960C',
+        color: Theme.accent,
     },
 
     countText: {
         fontSize: 11,
-        color: '#9C9C9C',
+        color: Theme.textSecondary,
         paddingHorizontal: 20,
         marginBottom: 8,
         letterSpacing: 0.5,
@@ -335,9 +336,9 @@ const s = StyleSheet.create({
         margin: 5,
         padding: 14,
         borderRadius: 18,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Theme.surface,
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
         alignItems: 'center',
         minHeight: 180,
         elevation: 2,
@@ -347,7 +348,7 @@ const s = StyleSheet.create({
         position: 'absolute',
         top: 10,
         left: 10,
-        backgroundColor: '#FFF3D6',
+        backgroundColor: Theme.accentLight,
         borderRadius: 8,
         paddingHorizontal: 6,
         paddingVertical: 2,
@@ -355,7 +356,7 @@ const s = StyleSheet.create({
 
     numText: {
         fontSize: 10,
-        color: '#8B5E00',
+        color: Theme.textGold,
         fontWeight: '700',
     },
 
@@ -368,21 +369,21 @@ const s = StyleSheet.create({
     cardName: {
         fontSize: 13,
         fontWeight: '700',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         textAlign: 'center',
         lineHeight: 18,
     },
 
     cardGuj: {
         fontSize: 11,
-        color: '#9C7C38',
+        color: Theme.textGold,
         marginTop: 3,
         textAlign: 'center',
     },
 
     symbolLabel: {
         fontSize: 10,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         marginTop: 4,
         textAlign: 'center',
     },
@@ -413,13 +414,13 @@ const s = StyleSheet.create({
 
     emptyText: {
         fontSize: 16,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         fontWeight: '600',
     },
 
     emptySubText: {
         fontSize: 13,
-        color: '#A0A0A0',
+        color: Theme.textSecondary,
         marginTop: 4,
     },
 });
