@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, ScrollView, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Theme } from '../config/theme';
 
 type Props = {
     children: React.ReactNode;
@@ -11,14 +12,15 @@ type Props = {
 export default function ScreenWrapper({
     children,
     scroll = false,
-    backgroundColor = '#0A0A18',
+    backgroundColor = Theme.background,
 }: Props) {
+    const isDarkBg = backgroundColor === Theme.primary || backgroundColor === '#001536' || backgroundColor === '#0A0A18';
     return (
         <SafeAreaView
             style={{ flex: 1, backgroundColor }}
             edges={['top', 'left', 'right']}
         >
-            <StatusBar barStyle="light-content" backgroundColor={backgroundColor} />
+            <StatusBar barStyle={isDarkBg ? "light-content" : "dark-content"} backgroundColor={backgroundColor} />
 
             {scroll ? (
                 <ScrollView

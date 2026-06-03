@@ -836,18 +836,37 @@ const ReelItem = ({
         <View style={[styles.reelContainer, { height: containerHeight }]}>
             {/* ── Video Player (at bottom of z-stack) ── */}
             {shouldMount && (
-                <ReelsNativeVideo
-                    src={resolvedSource}
-                    source={rawSource}
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: SCREEN_WIDTH,
-                        height: containerHeight,
-                    }}
-                    paused={paused}
-                />
+                Platform.OS === 'ios' ? (
+                    <Video
+                        ref={videoRef}
+                        source={rawSource}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: SCREEN_WIDTH,
+                            height: containerHeight,
+                        }}
+                        paused={paused}
+                        resizeMode="cover"
+                        repeat={true}
+                        onLoad={handleLoad}
+                        onError={handleError}
+                    />
+                ) : (
+                    <ReelsNativeVideo
+                        src={resolvedSource}
+                        source={rawSource}
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: SCREEN_WIDTH,
+                            height: containerHeight,
+                        }}
+                        paused={paused}
+                    />
+                )
             )}
 
             {/* ── Error state ── */}

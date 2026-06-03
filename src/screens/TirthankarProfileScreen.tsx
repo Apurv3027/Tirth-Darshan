@@ -15,6 +15,7 @@ import { Tirthankar } from '../data/tirthankars';
 import { dbService } from '../services/dbService';
 import { RootStackParams } from '../navigation';
 import ScreenWrapper from '../components/ScreenWrapper';
+import { Theme } from '../config/theme';
 
 type RouteT = RouteProp<RootStackParams, 'TirthankarProfile'>;
 type Nav = NativeStackNavigationProp<RootStackParams>;
@@ -109,10 +110,10 @@ export const TirthankarProfileScreen = () => {
 
     if (loading) {
         return (
-            <ScreenWrapper backgroundColor="#FDFBF6">
+            <ScreenWrapper backgroundColor={Theme.background}>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator size="large" color="#C8960C" />
-                    <Text style={{ fontSize: 15, color: '#8B5E00', fontWeight: '700', marginTop: 14 }}>
+                    <ActivityIndicator size="large" color={Theme.accent} />
+                    <Text style={{ fontSize: 15, color: Theme.textPrimary, fontWeight: '700', marginTop: 14 }}>
                         Unveiling sacred profile...
                     </Text>
                 </View>
@@ -122,7 +123,7 @@ export const TirthankarProfileScreen = () => {
 
     if (!t) {
         return (
-            <ScreenWrapper backgroundColor="#FDFBF6">
+            <ScreenWrapper backgroundColor={Theme.background}>
                 <View style={s.errorContainer}>
                     <Text style={s.errorText}>Tirthankar not found</Text>
                 </View>
@@ -141,7 +142,7 @@ export const TirthankarProfileScreen = () => {
     };
 
     return (
-        <ScreenWrapper backgroundColor="#FDFBF6">
+        <ScreenWrapper backgroundColor={Theme.background}>
             {/* <StatusBar barStyle="light-content" backgroundColor="#0A0A18" /> */}
 
             {/* ── Custom header ── */}
@@ -365,7 +366,7 @@ export const TirthankarProfileScreen = () => {
 const s = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FDFBF6',
+        backgroundColor: Theme.background,
     },
 
     scroll: {
@@ -376,11 +377,11 @@ const s = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#FDFBF6',
+        backgroundColor: Theme.background,
     },
 
     errorText: {
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         fontSize: 16,
     },
 
@@ -391,9 +392,9 @@ const s = StyleSheet.create({
         paddingTop: Platform.OS === 'ios' ? 56 : 16,
         paddingBottom: 12,
         paddingHorizontal: 16,
-        backgroundColor: '#FDFBF6',
+        backgroundColor: Theme.background,
         borderBottomWidth: 1,
-        borderBottomColor: '#F1E4C7',
+        borderBottomColor: Theme.borderGold,
     },
 
     backBtn: {
@@ -404,18 +405,18 @@ const s = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
     },
 
     backArrow: {
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         fontSize: 18,
         fontWeight: '600',
     },
 
     topBarTitle: {
         flex: 1,
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         fontSize: 15,
         fontWeight: '700',
         textAlign: 'center',
@@ -430,11 +431,11 @@ const s = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
     },
 
     shareIcon: {
-        color: '#C8960C',
+        color: Theme.accent,
         fontSize: 16,
         fontWeight: '700',
     },
@@ -445,7 +446,7 @@ const s = StyleSheet.create({
         paddingTop: 28,
         paddingBottom: 20,
         paddingHorizontal: 20,
-        backgroundColor: '#FFF8E7',
+        backgroundColor: Theme.accentLight,
     },
 
     prevNextRow: {
@@ -460,11 +461,11 @@ const s = StyleSheet.create({
         paddingVertical: 6,
         borderRadius: 8,
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
     },
 
     prevNextText: {
-        color: '#8B5E00',
+        color: Theme.textPrimary,
         fontSize: 12,
         fontWeight: '600',
     },
@@ -493,7 +494,7 @@ const s = StyleSheet.create({
 
     heroOrdinal: {
         fontSize: 11,
-        color: '#8A8A8A',
+        color: Theme.textSecondary,
         letterSpacing: 2,
         textTransform: 'uppercase',
         marginBottom: 6,
@@ -502,13 +503,13 @@ const s = StyleSheet.create({
     heroName: {
         fontSize: 26,
         fontWeight: '800',
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         textAlign: 'center',
     },
 
     heroGuj: {
         fontSize: 17,
-        color: '#9C7C38',
+        color: Theme.textGold,
         marginTop: 4,
         marginBottom: 14,
         textAlign: 'center',
@@ -538,12 +539,12 @@ const s = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#FFFFFF',
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
     },
 
     pillSymbolText: {
         fontSize: 12,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         fontWeight: '600',
     },
 
@@ -556,7 +557,7 @@ const s = StyleSheet.create({
         paddingHorizontal: 16,
         width: '100%',
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
     },
 
     yakshaBox: {
@@ -566,13 +567,13 @@ const s = StyleSheet.create({
 
     yakshaDivider: {
         width: 1,
-        backgroundColor: '#F1E4C7',
+        backgroundColor: Theme.borderGold,
         marginHorizontal: 12,
     },
 
     yakshaRole: {
         fontSize: 10,
-        color: '#8A8A8A',
+        color: Theme.textSecondary,
         letterSpacing: 0.5,
         textTransform: 'uppercase',
         marginBottom: 4,
@@ -580,18 +581,18 @@ const s = StyleSheet.create({
 
     yakshaName: {
         fontSize: 13,
-        color: '#C8960C',
+        color: Theme.accent,
         fontWeight: '700',
         textAlign: 'center',
     },
 
     // Tabs
     tabsWrapper: {
-        backgroundColor: '#FDFBF6',
+        backgroundColor: Theme.background,
         paddingTop: 10,
         paddingBottom: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#F1E4C7',
+        borderBottomColor: Theme.borderGold,
     },
 
     tabsScroll: {
@@ -605,7 +606,7 @@ const s = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         marginRight: 10,
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
         shadowColor: '#000',
         shadowOpacity: 0.04,
         shadowRadius: 4,
@@ -614,15 +615,15 @@ const s = StyleSheet.create({
     },
 
     tabPillActive: {
-        backgroundColor: '#C8960C',
-        borderColor: '#C8960C',
+        backgroundColor: Theme.accent,
+        borderColor: Theme.accent,
         transform: [{ scale: 1.03 }],
     },
 
     tabPillText: {
         fontSize: 13,
         fontWeight: '700',
-        color: '#8A8A8A',
+        color: Theme.textSecondary,
     },
 
     tabPillTextActive: {
@@ -641,7 +642,7 @@ const s = StyleSheet.create({
         padding: 16,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
     },
 
     sectionHeader: {
@@ -658,7 +659,7 @@ const s = StyleSheet.create({
     sectionTitle: {
         fontSize: 12,
         fontWeight: '700',
-        color: '#8B5E00',
+        color: Theme.textGold,
         letterSpacing: 1,
         textTransform: 'uppercase',
     },
@@ -668,31 +669,31 @@ const s = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 9,
         borderBottomWidth: 1,
-        borderBottomColor: '#F7EED8',
+        borderBottomColor: Theme.borderGold,
     },
 
     infoLabel: {
         fontSize: 13,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         flex: 1,
     },
 
     infoValue: {
         fontSize: 13,
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         flex: 1.4,
         textAlign: 'right',
         fontWeight: '500',
     },
 
     infoValueAccent: {
-        color: '#C8960C',
+        color: Theme.textGold,
         fontWeight: '700',
     },
 
     significanceText: {
         fontSize: 14,
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         lineHeight: 22,
     },
 
@@ -721,7 +722,7 @@ const s = StyleSheet.create({
 
     kalyanakIntro: {
         fontSize: 12,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         marginBottom: 12,
         fontStyle: 'italic',
     },
@@ -736,19 +737,19 @@ const s = StyleSheet.create({
         width: 8,
         height: 8,
         borderRadius: 4,
-        backgroundColor: '#C8960C',
+        backgroundColor: Theme.accent,
         marginTop: 5,
     },
 
     kalyanakLabel: {
         fontSize: 11,
-        color: '#8A8A8A',
+        color: Theme.textSecondary,
         textTransform: 'uppercase',
     },
 
     kalyanakPlace: {
         fontSize: 13,
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         fontWeight: '600',
         marginTop: 2,
     },
@@ -763,29 +764,29 @@ const s = StyleSheet.create({
         width: 22,
         height: 22,
         borderRadius: 11,
-        backgroundColor: '#FFF3D6',
+        backgroundColor: Theme.accentLight,
         borderWidth: 1,
-        borderColor: '#F1D68A',
+        borderColor: Theme.borderGold,
         justifyContent: 'center',
         alignItems: 'center',
     },
 
     teachingBulletText: {
         fontSize: 10,
-        color: '#C8960C',
+        color: Theme.accent,
         fontWeight: '800',
     },
 
     teachingText: {
         fontSize: 14,
-        color: '#5B3A00',
+        color: Theme.textSecondary,
         lineHeight: 22,
         flex: 1,
     },
 
     tirthIntro: {
         fontSize: 12,
-        color: '#7A7A7A',
+        color: Theme.textSecondary,
         marginBottom: 12,
         fontStyle: 'italic',
     },
@@ -794,52 +795,52 @@ const s = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#FFF8E7',
+        backgroundColor: Theme.accentLight,
         borderRadius: 12,
         paddingVertical: 13,
         paddingHorizontal: 14,
         marginBottom: 8,
         borderWidth: 1,
-        borderColor: '#F1E4C7',
+        borderColor: Theme.borderGold,
     },
 
     tirthChipText: {
         fontSize: 14,
-        color: '#5B3A00',
+        color: Theme.textPrimary,
         fontWeight: '600',
         flex: 1,
     },
 
     tirthChipArrow: {
-        color: '#C8960C',
+        color: Theme.accent,
         fontSize: 16,
         fontWeight: '700',
     },
 
     nirvanaHighlight: {
-        backgroundColor: '#FFF8E7',
+        backgroundColor: Theme.accentLight,
         borderRadius: 12,
         padding: 14,
         borderWidth: 1,
-        borderColor: '#F1D68A',
+        borderColor: Theme.borderGold,
     },
 
     nirvanaHighlightPlace: {
         fontSize: 16,
         fontWeight: '800',
-        color: '#C8960C',
+        color: Theme.textGold,
         marginBottom: 6,
     },
 
     nirvanaHighlightDesc: {
         fontSize: 13,
-        color: '#9C7C38',
+        color: Theme.textSecondary,
         lineHeight: 20,
     },
 
     footer: {
         textAlign: 'center',
-        color: '#A68A54',
+        color: Theme.accent,
         fontSize: 14,
         paddingVertical: 28,
         letterSpacing: 2,

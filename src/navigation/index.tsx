@@ -10,6 +10,7 @@ import { TirthankarProfileScreen } from '../screens/TirthankarProfileScreen';
 import { TirthDetailScreen } from '../screens/TirthDetailScreen';
 import { ReelsScreen } from '../screens/ReelsScreen';
 import { SplashScreen } from '../screens/SplashScreen';
+import { Theme } from '../config/theme';
 
 // ── Type definitions ──
 export type RootStackParams = {
@@ -34,13 +35,13 @@ const TabNavigator = () => (
         screenOptions={{
             headerShown: false,
             tabBarStyle: {
-                backgroundColor: '#FFFFFF',
-                borderTopColor: '#F1E4C7',
+                backgroundColor: Theme.surface,
+                borderTopColor: Theme.borderGold,
                 height: 62,
                 paddingBottom: 6,
                 paddingTop: 6,
             },
-            tabBarActiveTintColor: '#C8960C',
+            tabBarActiveTintColor: Theme.accent,
             tabBarInactiveTintColor: '#9CA3AF',
             tabBarLabelStyle: {
                 fontSize: 12,
@@ -83,12 +84,12 @@ export const AppNavigator = () => (
         <Stack.Navigator
             screenOptions={{
                 headerStyle: {
-                    backgroundColor: '#FFFFFF',
+                    backgroundColor: Theme.surface,
                 },
-                headerTintColor: '#8B5E00',
+                headerTintColor: Theme.textPrimary,
                 headerShadowVisible: false,
                 contentStyle: {
-                    backgroundColor: '#FDFBF6',
+                    backgroundColor: Theme.background,
                 },
                 headerShown: false,
             }}
