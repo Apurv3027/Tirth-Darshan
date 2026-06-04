@@ -6,12 +6,14 @@
  * will gracefully fall back to local mock data to prevent crashes.
  */
 
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@env';
+
 export const SUPABASE_CONFIG = {
   // Your Supabase Project URL (e.g., 'https://xyzcompany.supabase.co')
-  URL: 'https://mnhzjtedwqmebejywxii.supabase.co',
+  URL: SUPABASE_URL,
 
   // Your Supabase Anonymous API Key (Anon Key)
-  ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uaHpqdGVkd3FtZWJlanl3eGlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTQyMjQsImV4cCI6MjA5NTI5MDIyNH0.0hvcHFCiMBWPQohmaEY5p-0BfkHrWqYY88woDT33NqU',
+  ANON_KEY: SUPABASE_ANON_KEY,
 };
 
 export const isSupabaseConfigured = (): boolean => {
