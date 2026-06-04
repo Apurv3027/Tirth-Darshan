@@ -1,8 +1,15 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
+import * as Sentry from '@sentry/react-native';
+
+export const navigationIntegration = Sentry.reactNavigationIntegration({
+    enableTimeToInitialDisplay: true,
+});
+
+export const navigationRef = createNavigationContainerRef();
 
 import { HomeScreen } from '../screens/HomeScreen';
 import { TirthankarListScreen } from '../screens/TirthankarListScreen';
@@ -80,7 +87,12 @@ const TabNavigator = () => (
 
 // ── Root stack ──
 export const AppNavigator = () => (
-    <NavigationContainer>
+    <NavigationContainer
+        ref={navigationRef}
+        onReady={() => {
+            navigationIntegration.registerNavigationContainer(navigationRef);
+        }}
+    >
         <Stack.Navigator
             screenOptions={{
                 headerStyle: {

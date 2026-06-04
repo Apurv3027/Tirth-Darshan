@@ -259,9 +259,9 @@ export const HomeScreen = () => {
     // Dynamic Spotlight Calculations
     const today = new Date();
     const lund = getLunarTithiAndMonth(today);
-    
+
     // Look for matching Kalyanak today
-    const activeKalyanak = KALYANAKS.find(k => 
+    const activeKalyanak = KALYANAKS.find(k =>
         k.month.toLowerCase() === lund.month.toLowerCase() &&
         k.paksha.toLowerCase() === lund.paksha.toLowerCase() &&
         k.tithi.toLowerCase() === lund.tithi.toLowerCase()
@@ -282,7 +282,7 @@ export const HomeScreen = () => {
         const diff = today.getTime() - startOfYear.getTime();
         const oneDay = 1000 * 60 * 60 * 24;
         const dayOfYear = Math.floor(diff / oneDay);
-        
+
         const todayIndex = dayOfYear % tirthankars.length;
         tirthankarOfTheDay = tirthankars[todayIndex];
     }
@@ -461,7 +461,7 @@ export const HomeScreen = () => {
                 {tirthankarOfTheDay && (() => {
                     const associatedTirths = tirths.filter(t => t.tirthankarId === tirthankarOfTheDay.id);
                     const tirthColor = tirthankarOfTheDay.colorHex || Theme.accent;
-                    
+
                     // Combine database Tirths with static famous ones to always have a rich chip selection
                     const chipsList = [
                         ...associatedTirths.map(t => ({ id: t.id, name: t.name, isReal: true })),
@@ -587,7 +587,7 @@ export const HomeScreen = () => {
                                 {showKalyanaks && (
                                     <View style={styles.kalyanakTimelineContainer}>
                                         <View style={[styles.kalyanakTimelineLine, { backgroundColor: tirthColor + '30' }]} />
-                                        
+
                                         <View style={styles.kalyanakTimelineNode}>
                                             <View style={[styles.kalyanakTimelineDot, { backgroundColor: tirthColor }]} />
                                             <View style={styles.kalyanakTimelineInfo}>
@@ -719,7 +719,7 @@ export const HomeScreen = () => {
                                         const progress = data.currentTime / total;
                                         setAudioProgress(progress);
                                         setCurrentSeconds(data.currentTime);
-                                        
+
                                         if (progress < 0.98) {
                                             setSavedPositions(prev => ({
                                                 ...prev,
@@ -805,7 +805,7 @@ export const HomeScreen = () => {
                         <TouchableOpacity
                             style={[
                                 styles.quoteCard,
-                                { 
+                                {
                                     borderColor: qColor + '25',
                                     backgroundColor: '#FFFFFF',
                                     shadowColor: qColor,
@@ -827,13 +827,13 @@ export const HomeScreen = () => {
                             {/* Top row: Scripture Source Pill */}
                             {activeQuote.source && (
                                 <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 8 }}>
-                                    <View style={{ 
-                                        backgroundColor: qColor + '0d', 
-                                        borderColor: qColor + '25', 
-                                        borderWidth: 1, 
-                                        borderRadius: 12, 
-                                        paddingHorizontal: 10, 
-                                        paddingVertical: 3 
+                                    <View style={{
+                                        backgroundColor: qColor + '0d',
+                                        borderColor: qColor + '25',
+                                        borderWidth: 1,
+                                        borderRadius: 12,
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 3
                                     }}>
                                         <Text style={{ fontSize: 9, color: qColor, fontWeight: '800', letterSpacing: 0.5, textTransform: 'uppercase' }}>
                                             📜 {activeQuote.source}
@@ -844,11 +844,11 @@ export const HomeScreen = () => {
 
                             {/* Quote Text */}
                             <Text style={[
-                                styles.quoteText, 
-                                { 
-                                    color: Theme.textPrimary, 
-                                    lineHeight: 22, 
-                                    fontSize: 13.5, 
+                                styles.quoteText,
+                                {
+                                    color: Theme.textPrimary,
+                                    lineHeight: 22,
+                                    fontSize: 13.5,
                                     paddingRight: 6,
                                     marginTop: activeQuote.source ? 0 : 8
                                 }
@@ -868,12 +868,12 @@ export const HomeScreen = () => {
                                     </Text>
                                 </View>
 
-                                <View style={{ 
-                                    backgroundColor: Theme.background, 
-                                    borderColor: qColor + '30', 
-                                    borderWidth: 1, 
-                                    borderRadius: 10, 
-                                    paddingHorizontal: 8, 
+                                <View style={{
+                                    backgroundColor: Theme.background,
+                                    borderColor: qColor + '30',
+                                    borderWidth: 1,
+                                    borderRadius: 10,
+                                    paddingHorizontal: 8,
                                     paddingVertical: 4,
                                     flexDirection: 'row',
                                     alignItems: 'center'
