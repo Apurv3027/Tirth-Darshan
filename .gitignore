@@ -131,6 +131,7 @@ babel.config.js.cache
 *.pem
 *.key
 *.mobileprovision
+sentry.properties
 
 # Misc
 *.swp
